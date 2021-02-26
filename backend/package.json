@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Post Overflow Website REST API",
+  "main": "src/main.js",
+  "author": "Artun Çolak, Merve Sezer, Öznur Suçeken",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon main.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
