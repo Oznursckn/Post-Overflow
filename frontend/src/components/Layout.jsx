@@ -1,5 +1,5 @@
 import { Navbar, Form, FormControl, Button, Container } from "react-bootstrap";
-export default function Layout({children}) {
+export default function Layout({ children }) {
   return (
     <div className="layout">
       <Navbar bg="light" expand="lg">
@@ -11,12 +11,14 @@ export default function Layout({children}) {
             <Button variant="outline-success">Search</Button>
           </Form>
           <div className="ml-auto">
-            <Button className="mr-3">Giriş Yap</Button>
-            <Button>Üye Ol</Button>
+            <Button variant="outline-success" className="mr-3">
+              Giriş Yap
+            </Button>
+            <Button variant="outline-success">Üye Ol</Button>
           </div>
         </Navbar.Collapse>
       </Navbar>
-      <Container className="content">{children}</Container>
+      <Container className="content mt-3">{children}</Container>
       <footer className="footer d-flex flex-column justify-content-center align-items-center bg-light">
         Öznur Suçeken & Merve Sezer & Artun Çolak
       </footer>

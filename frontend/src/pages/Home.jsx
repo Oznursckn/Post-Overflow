@@ -1,4 +1,39 @@
 import Layout from "../components/Layout";
+import Post from "../components/Post";
+import News from "../components/News";
+import { Row, Col } from "react-bootstrap";
+import Tag from "../components/Tags";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 export default function Home() {
-  return <Layout></Layout>;
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    async function getPosts() {
+      let response = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts"
+      );
+      setPosts(response.data);
+    }
+    getPosts();
+  }, []);
+
+  return (
+    <Layout>
+      <Row>
+        <Col>
+          <Tag />
+        </Col>
+        <Col xs={6}>
+          {posts.map((post) => (
+            <Post data={post}/>
+          ))}
+        </Col>
+        <Col>
+          <News />
+        </Col>
+      </Row>
+    </Layout>
+  );
 }
