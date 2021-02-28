@@ -1,7 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+} from "typeorm";
+import Post from "./Post";
 
 @Entity()
-export default class User {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -19,4 +26,7 @@ export default class User {
 
   @Column()
   dateCreated: Date;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }

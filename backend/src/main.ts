@@ -2,11 +2,12 @@ import "reflect-metadata";
 import express from "express";
 import { connectToDatabase } from "./database";
 
-const app = express();
+import controllers from "./controllers";
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Post Overflow Rest API" });
-});
+const app = express();
+app.use(express.json());
+
+app.use("/api", controllers);
 
 const PORT = process.env.PORT || 5000;
 
