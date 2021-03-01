@@ -1,34 +1,38 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import { getRepository } from "typeorm";
+import { UserDto } from "../dto/userDto";
+import { ApiError } from "../config/ApiError";
 
 class UserService {
   async getAll() {
     return await User.find();
   }
-  async save(body) {
+
+  async save(userDto: UserDto) {
+    userDto.password = await bcrypt.hash(userDto.password, 10);
     await User.create({
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      password: await bcrypt.hash(body.password, 10),
+      ...userDto,
       dateCreated: new Date(),
     }).save();
   }
+
   async getById(id: string) {
-    return await User.findOne(id);
+    const user = await User.findOne(id);
+    if (!user) {
+      throw new ApiError(404, `${id} id ye sahip kullanıcı bulunamadı`);
+    }
+    return user;
   }
 
   async delete(id: string) {
-    await User.delete(id);
+    const user = await this.getById(id);
+    await User.delete(user);
   }
 
-  async update(id: string) {
-    await getRepository(User).findOne(id);
-    if (User) {
-      getRepository(User).merge(User,req.body);
-      getRepository(User).save(User);
-    }
+  async update(id: string, updateUserDto: Partial<UserDto>) {
+    const user = await User.findOne(id);
+
+    User.update(user, updateUserDto);
   }
 }
 
