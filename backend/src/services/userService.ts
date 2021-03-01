@@ -1,5 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
+import { getRepository } from "typeorm";
 
 class UserService {
   async getAll() {
@@ -14,12 +15,20 @@ class UserService {
       dateCreated: new Date(),
     }).save();
   }
-  async getById(id:string){
-      return await User.findOne(id);
+  async getById(id: string) {
+    return await User.findOne(id);
   }
 
-  async delete(id:string){
-      await User.delete(id);
+  async delete(id: string) {
+    await User.delete(id);
+  }
+
+  async update(id: string) {
+    await getRepository(User).findOne(id);
+    if (User) {
+      getRepository(User).merge(User,req.body);
+      getRepository(User).save(User);
+    }
   }
 }
 

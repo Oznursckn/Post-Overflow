@@ -26,4 +26,9 @@ router.delete("/:id", async (req, res) => {
   res.status(204).send();
 });
 
+router.put("/:id", async (req,res) => {
+    await userService.update(req.params.id);
+    res.status(204).send();
+});
+
 export default router;
