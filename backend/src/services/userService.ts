@@ -30,9 +30,11 @@ class UserService {
   }
 
   async update(id: string, updateUserDto: Partial<UserDto>) {
-    const user = await User.findOne(id);
-
-    User.update(user, updateUserDto);
+    const user = await this.getById(id);
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+    await User.update(user, updateUserDto);
   }
 }
 
