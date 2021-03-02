@@ -1,7 +1,7 @@
 import { createConnection } from "typeorm";
-import Post from "./models/Post";
 
-import User from "./models/User";
+import Post from "../models/Post";
+import User from "../models/User";
 
 export async function connectToDatabase() {
   const connection = await createConnection({

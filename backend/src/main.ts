@@ -4,8 +4,8 @@ import colors from "colors";
 import morgan from "morgan";
 
 import logger from "./config/logger";
+import { connectToDatabase } from "./config/database";
 import controllers from "./controllers";
-import { connectToDatabase } from "./database";
 
 async function start() {
   const app = express();
