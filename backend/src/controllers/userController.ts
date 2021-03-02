@@ -1,6 +1,7 @@
 import express from "express";
 import { nextTick } from "process";
 import userService from "../services/userService";
+import postService from "../services/postService";
 
 const router = express.Router();
 
@@ -34,9 +35,21 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
-  await userService.update(req.params.id, req.body);
-  res.status(200).send();
+router.put("/:id", async (req, res, next) => {
+  try {
+    await userService.update(req.params.id, req.body);
+    res.status(200).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:userId/posts", async (req, res, next) => {
+  try {
+    res.json(await postService.getPostsByUserId(req.params.userId));
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;
