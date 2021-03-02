@@ -1,16 +1,34 @@
 import "reflect-metadata";
 import express from "express";
-import { connectToDatabase } from "./database";
+import colors from "colors";
+import morgan from "morgan";
 
-const app = express();
+import logger from "./config/logger";
+import { connectToDatabase } from "./config/database";
+import controllers from "./controllers";
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Post Overflow Rest API" });
-});
+async function start() {
+  const app = express();
+  const PORT = 5000;
 
-const PORT = process.env.PORT || 5000;
+  colors.enable();
 
-connectToDatabase();
-app.listen(PORT, () =>
-  console.log(`API http://localhost:${PORT} adresinde çalışmaya başladı`)
-);
+  app.use(morgan(logger));
+  app.use(express.json());
+  app.use("/api", controllers);
+
+  console.clear();
+  console.log(`${`[Server]`.green} Environment: ${process.env.NODE_ENV}`);
+
+  await connectToDatabase();
+
+  app.listen(PORT, () =>
+    console.log(
+      `${`[Server]`.green} API ${
+        `http://localhost:${PORT}`.blue
+      } ${"Adresinde Çalışmaya Başladı"}\n`
+    )
+  );
+}
+
+start();
