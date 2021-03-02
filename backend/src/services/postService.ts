@@ -1,17 +1,38 @@
+import { ApiError } from "../config/ApiError";
 import PostDto from "../dto/postDto";
 import Post from "../models/Post";
+import userService from "./userService";
 
 class PostService {
-  async getAll() {
-    return Post.find();
+  async save(postDto: PostDto) {
+    await userService.getById(postDto.userId);
+    await Post.create({
+      ...postDto,
+      like: 0,
+      dateCreated: new Date(),
+    }).save();
   }
 
-  async save(postDto: PostDto) {
-    //console.log(postDto);
+  async getAll() {
+    return Post.find({ relations: ["user"] });
   }
 
   async getById(id: string) {
-    return Post.findOne(id);
+    const post = Post.findOne(id, { relations: ["user"] });
+    if (!post) {
+      throw new ApiError(404, `${id} Id ye sahip paylaşım bulunamadı`);
+    }
+    return post;
+  }
+
+  async delete(id: string) {
+    const post = await this.getById(id);
+    await Post.delete(post);
+  }
+
+  async getPostsByUserId(userId: string) {
+    const user = await userService.getById(userId);
+    return await Post.find({ where: { user: user } });
   }
 }
 

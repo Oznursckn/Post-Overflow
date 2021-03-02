@@ -4,6 +4,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   BaseEntity,
+  JoinColumn,
 } from "typeorm";
 import User from "./User";
 
@@ -23,6 +24,9 @@ export default class Post extends BaseEntity {
 
   @Column()
   like: number;
+
+  @Column({ type: "uuid", select: false, length: 36 })
+  userId: string;
 
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
