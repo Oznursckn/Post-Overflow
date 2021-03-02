@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+$font-family-sans-serif: "Montserrat", sans-serif;
+
+$footer-height: 56px;
+
+$border-radius: 10px;
+
+//Renkler
+$primary: #085f63;
+$secondary: #49beb7;
+$link-color: #ff5959;
+$light: white;
+
+$body-bg: #f8f8f9;
+
+$card-border-color: #085f63;
+
+$box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";

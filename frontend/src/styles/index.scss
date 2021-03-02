@@ -1,0 +1,40 @@
+@import "./theme.scss";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+.layout {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+}
+.footer {
+  height: $footer-height;
+  flex-shrink: 0;
+}
+.login-card {
+  width: 50%;
+}
+.login-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.register-card {
+  width: 50%;
+}
+.register-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tags-list{
+  background-color:transparent !important;
+}
