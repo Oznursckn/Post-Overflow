@@ -4,6 +4,8 @@ import { connectToDatabase } from "./database";
 
 import controllers from "./controllers";
 
+console.log(process.env.NODE_ENV);
+
 const app = express();
 app.use(express.json());
 
