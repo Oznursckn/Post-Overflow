@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { UserDto } from "../dto/userDto";
 import { ApiError } from "../config/ApiError";
 
-
 class UserService {
   async getAll() {
     return await User.find();
@@ -37,8 +36,6 @@ class UserService {
     }
     await User.update(user, updateUserDto);
   }
-
-  
 }
 
 export default new UserService();
