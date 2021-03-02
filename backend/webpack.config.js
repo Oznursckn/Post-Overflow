@@ -8,7 +8,11 @@ module.exports = {
   mode: NODE_ENV,
   target: "node",
   externalsPresets: { node: true },
-  externals: [nodeExternals({ allowlist: ["express", "reflect-metadata"] })],
+  externals: [
+    nodeExternals({
+      allowlist: ["express", "reflect-metadata", "colors", "morgan"],
+    }),
+  ],
   resolve: {
     extensions: [".ts", ".js"],
   },

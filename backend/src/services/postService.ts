@@ -7,7 +7,7 @@ class PostService {
   }
 
   async save(postDto: PostDto) {
-    console.log(postDto);
+    //console.log(postDto);
   }
 
   async getById(id: string) {

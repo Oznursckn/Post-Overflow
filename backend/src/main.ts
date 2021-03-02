@@ -1,19 +1,34 @@
 import "reflect-metadata";
 import express from "express";
+import colors from "colors";
+import morgan from "morgan";
+
+import logger from "./config/logger";
+import controllers from "./controllers";
 import { connectToDatabase } from "./database";
 
-import controllers from "./controllers";
+async function start() {
+  const app = express();
+  const PORT = 5000;
 
-console.log(process.env.NODE_ENV);
+  colors.enable();
 
-const app = express();
-app.use(express.json());
+  app.use(morgan(logger));
+  app.use(express.json());
+  app.use("/api", controllers);
 
-app.use("/api", controllers);
+  console.clear();
+  console.log(`${`[Server]`.green} Environment: ${process.env.NODE_ENV}`);
 
-const PORT = process.env.PORT || 5000;
+  await connectToDatabase();
 
-connectToDatabase();
-app.listen(PORT, () =>
-  console.log(`API http://localhost:${PORT} adresinde çalışmaya başladı`)
-);
+  app.listen(PORT, () =>
+    console.log(
+      `${`[Server]`.green} API ${
+        `http://localhost:${PORT}`.blue
+      } ${"adresinde çalışmaya başladı"}\n`
+    )
+  );
+}
+
+start();
