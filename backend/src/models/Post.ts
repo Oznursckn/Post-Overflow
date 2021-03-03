@@ -5,8 +5,11 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import User from "./User";
+import Comment from "./Comment";
+
 
 @Entity()
 export default class Post extends BaseEntity {
@@ -16,7 +19,7 @@ export default class Post extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({type:"text"})
   body: string;
 
   @Column()
@@ -31,4 +34,7 @@ export default class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts, { onDelete: "SET NULL" })
   @JoinColumn({ name: "userId" })
   user: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post, {onDelete:"CASCADE"})
+  comments: Comment[];
 }

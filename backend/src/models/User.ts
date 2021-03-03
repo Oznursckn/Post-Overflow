@@ -6,6 +6,7 @@ import {
   BaseEntity,
 } from "typeorm";
 import Post from "./Post";
+import Comment from "./Comment";
 
 @Entity()
 export default class User extends BaseEntity {
@@ -29,4 +30,7 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() =>Comment,(comment) =>comment.user)
+  comments:Comment[];
 }

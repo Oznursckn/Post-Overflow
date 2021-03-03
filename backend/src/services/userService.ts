@@ -9,6 +9,10 @@ class UserService {
   }
 
   async save(userDto: UserDto) {
+    const user = await User.findOne({ where: { email: userDto.email } });
+    if (user) {
+      throw new ApiError(400, "Bu email adresi kullanılmaktadır");
+    }
     userDto.password = await bcrypt.hash(userDto.password, 10);
     await User.create({
       ...userDto,
