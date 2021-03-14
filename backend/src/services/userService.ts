@@ -2,6 +2,7 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 import UserDto from "../dto/userDto";
 import { ApiError } from "../config/ApiError";
+import { StatusCodes } from "http-status-codes";
 
 class UserService {
   async getAll() {
@@ -11,7 +12,10 @@ class UserService {
   async save(userDto: UserDto) {
     const user = await User.findOne({ where: { email: userDto.email } });
     if (user) {
-      throw new ApiError(400, "Bu email adresi kullanılmaktadır");
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        "Bu email adresi kullanılmaktadır"
+      );
     }
     userDto.password = await bcrypt.hash(userDto.password, 10);
     await User.create({
@@ -23,7 +27,10 @@ class UserService {
   async getById(id: string) {
     const user = await User.findOne(id);
     if (!user) {
-      throw new ApiError(404, `${id} id ye sahip kullanıcı bulunamadı`);
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `${id} id ye sahip kullanıcı bulunamadı`
+      );
     }
     return user;
   }

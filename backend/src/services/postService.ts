@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
 import PostDto from "../dto/postDto";
 import Post from "../models/Post";
@@ -20,7 +21,10 @@ class PostService {
   async getById(id: string) {
     const post = await Post.findOne(id, { relations: ["user"] });
     if (!post) {
-      throw new ApiError(404, `${id} Id ye sahip paylaşım bulunamadı`);
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `${id} Id ye sahip paylaşım bulunamadı`
+      );
     }
     return post;
   }

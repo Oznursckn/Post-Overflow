@@ -1,4 +1,5 @@
 import express from "express";
+import { StatusCodes } from "http-status-codes";
 
 import commentService from "../services/commentService";
 import postService from "../services/postService";
@@ -16,7 +17,7 @@ router.get("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     await postService.save(req.body);
-    res.status(201).send();
+    res.status(StatusCodes.CREATED).send();
   } catch (error) {
     next(error);
   }
@@ -33,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     await postService.delete(req.params.id);
-    res.status(204).send();
+    res.status(StatusCodes.NO_CONTENT).send();
   } catch (error) {
     next(error);
   }
