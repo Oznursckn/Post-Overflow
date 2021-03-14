@@ -12,7 +12,7 @@ export async function connectToDatabase() {
     username: "root",
     password: "1234",
     database: "post-overflow",
-    entities: [User, Post,Comment],
+    entities: [User, Post, Comment],
     synchronize: true,
   });
   console.log(`${`[Server]`.green} Veritabanına Bağlanıldı`);

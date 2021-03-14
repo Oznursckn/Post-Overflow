@@ -18,7 +18,7 @@ class PostService {
   }
 
   async getById(id: string) {
-    const post = Post.findOne(id, { relations: ["user"] });
+    const post = await Post.findOne(id, { relations: ["user"] });
     if (!post) {
       throw new ApiError(404, `${id} Id ye sahip paylaşım bulunamadı`);
     }
@@ -27,7 +27,7 @@ class PostService {
 
   async delete(id: string) {
     const post = await this.getById(id);
-    await Post.delete(post);
+    await post.remove();
   }
 
   async getPostsByUserId(userId: string) {

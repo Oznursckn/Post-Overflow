@@ -1,5 +1,5 @@
 export default class CommentDto {
-  body: Text;
+  body: string;
   userId: string;
   postId: string;
 }

@@ -31,6 +31,6 @@ export default class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @OneToMany(() =>Comment,(comment) =>comment.user)
-  comments:Comment[];
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

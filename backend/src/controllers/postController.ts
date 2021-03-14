@@ -1,4 +1,6 @@
 import express from "express";
+
+import commentService from "../services/commentService";
 import postService from "../services/postService";
 
 const router = express.Router();
@@ -32,6 +34,14 @@ router.delete("/:id", async (req, res, next) => {
   try {
     await postService.delete(req.params.id);
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id/comments", async (req, res, next) => {
+  try {
+    res.json(await commentService.getByPostId(req.params.id));
   } catch (error) {
     next(error);
   }

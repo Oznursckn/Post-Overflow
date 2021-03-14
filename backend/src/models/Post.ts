@@ -10,7 +10,6 @@ import {
 import User from "./User";
 import Comment from "./Comment";
 
-
 @Entity()
 export default class Post extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -19,7 +18,7 @@ export default class Post extends BaseEntity {
   @Column()
   title: string;
 
-  @Column({type:"text"})
+  @Column({ type: "text" })
   body: string;
 
   @Column()
@@ -35,6 +34,6 @@ export default class Post extends BaseEntity {
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post, {onDelete:"CASCADE"})
+  @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 }
