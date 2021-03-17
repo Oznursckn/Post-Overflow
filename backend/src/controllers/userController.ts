@@ -1,5 +1,4 @@
 import express from "express";
-import { nextTick } from "process";
 import userService from "../services/userService";
 import postService from "../services/postService";
 import { StatusCodes } from "http-status-codes";

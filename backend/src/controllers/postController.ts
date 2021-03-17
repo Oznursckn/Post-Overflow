@@ -1,6 +1,5 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
-import { stringify } from "node:querystring";
 
 import commentService from "../services/commentService";
 import postService from "../services/postService";
