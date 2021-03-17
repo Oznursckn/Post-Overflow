@@ -3,6 +3,7 @@ import { nextTick } from "process";
 import userService from "../services/userService";
 import postService from "../services/postService";
 import { StatusCodes } from "http-status-codes";
+import commentService from "../services/commentService";
 
 const router = express.Router();
 
@@ -45,9 +46,41 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/:userId/posts", async (req, res, next) => {
+router.get("/:id/posts", async (req, res, next) => {
   try {
-    res.json(await postService.getPostsByUserId(req.params.userId));
+    res.json(await postService.getPostsByUserId(req.params.id));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id/liked-posts", async (req, res, next) => {
+  try {
+    res.json(await postService.getLikedPostsByUserId(req.params.id));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id/saved-posts", async (req, res, next) => {
+  try {
+    res.json(await postService.getSavedPostsByUserId(req.params.id));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id/liked-comments", async (req, res, next) => {
+  try {
+    res.json(await commentService.getLikedCommentsByUserId(req.params.id));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id/disliked-comments", async (req, res, next) => {
+  try {
+    res.json(await commentService.getDislikedCommentsByUserId(req.params.id));
   } catch (error) {
     next(error);
   }

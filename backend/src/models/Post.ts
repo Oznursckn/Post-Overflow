@@ -25,9 +25,9 @@ export default class Post extends BaseEntity {
   dateCreated: Date;
 
   @Column()
-  like: number;
+  likes: number;
 
-  @Column({ type: "uuid", select: false, length: 36, nullable: true })
+  @Column({ type: "uuid", select: false, nullable: true })
   userId: string;
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: "SET NULL" })

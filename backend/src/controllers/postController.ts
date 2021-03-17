@@ -48,4 +48,40 @@ router.get("/:id/comments", async (req, res, next) => {
   }
 });
 
+router.post("/:id/like", async (req, res, next) => {
+  try {
+    await postService.like(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:id/unlike", async (req, res, next) => {
+  try {
+    await postService.unlike(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:id/save", async (req, res, next) => {
+  try {
+    await postService.savePost(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:id/unsave", async (req, res, next) => {
+  try {
+    await postService.unsavePost(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

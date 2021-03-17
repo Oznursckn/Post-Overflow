@@ -18,18 +18,18 @@ export default class Comment extends BaseEntity {
   body: string;
 
   @Column()
-  like: number;
+  likes: number;
 
   @Column()
-  dislike: number;
+  dislikes: number;
 
   @Column()
   dateCreated: Date;
 
-  @Column({ type: "uuid", select: false, length: 36, nullable: true })
+  @Column({ type: "uuid", select: false, nullable: true })
   userId: string;
 
-  @Column({ type: "uuid", select: false, length: 36, nullable: false })
+  @Column({ type: "uuid", select: false, nullable: false })
   postId: string;
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: "SET NULL" })
