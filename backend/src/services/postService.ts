@@ -3,6 +3,8 @@ import { ApiError } from "../config/ApiError";
 import PostDto from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
+import { Connection, Like } from "typeorm";
+import { CheckMetadata } from "typeorm/metadata/CheckMetadata";
 
 class PostService {
   async save(postDto: PostDto) {
@@ -14,8 +16,18 @@ class PostService {
     }).save();
   }
 
-  async getAll() {
-    return Post.find({ relations: ["user"] });
+  async getAll(search: string) {
+    let where = {};
+
+    if (search) {
+      where = { title: Like(`%${search}%`) };
+    }
+
+    return Post.find({
+      relations: ["user"],
+      order: { dateCreated: "DESC" },
+      where,
+    });
   }
 
   async getById(id: string) {

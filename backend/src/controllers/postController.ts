@@ -1,5 +1,6 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import { stringify } from "node:querystring";
 
 import commentService from "../services/commentService";
 import postService from "../services/postService";
@@ -7,8 +8,9 @@ import postService from "../services/postService";
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
+  const search = req.query.search ? String(req.query.search) : null;
   try {
-    res.json(await postService.getAll());
+    res.send(await postService.getAll(search));
   } catch (error) {
     next(error);
   }

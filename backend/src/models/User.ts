@@ -30,6 +30,9 @@ export default class User extends BaseEntity {
   @Column()
   dateCreated: Date;
 
+  @Column({ type: "text", nullable: true })
+  about: string;
+
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
