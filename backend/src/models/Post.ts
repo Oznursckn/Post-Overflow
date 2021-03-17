@@ -25,7 +25,7 @@ export default class Post extends BaseEntity {
   dateCreated: Date;
 
   @Column()
-  like: number;
+  likes: number;
 
   @Column({ type: "uuid", select: false, nullable: true })
   userId: string;
@@ -36,5 +36,4 @@ export default class Post extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
-  
 }

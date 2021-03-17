@@ -4,6 +4,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   BaseEntity,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import Post from "./Post";
 import Comment from "./Comment";
@@ -28,7 +30,7 @@ export default class User extends BaseEntity {
   @Column()
   dateCreated: Date;
 
-  @Column({type:"text",nullable:true})
+  @Column({ type: "text", nullable: true })
   about: string;
 
   @OneToMany(() => Post, (post) => post.user)
@@ -36,4 +38,20 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @ManyToMany(() => Post)
+  @JoinTable()
+  savedPosts: Post[];
+
+  @ManyToMany(() => Post)
+  @JoinTable()
+  likedPosts: Post[];
+
+  @ManyToMany(() => Comment)
+  @JoinTable()
+  likedComments: Comment[];
+
+  @ManyToMany(() => Comment)
+  @JoinTable()
+  dislikedComments: Comment[];
 }

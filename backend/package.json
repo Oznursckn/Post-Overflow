@@ -12,6 +12,7 @@
     "dev": "cross-env NODE_ENV=development nodemon src/main.ts"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
     "express": "^4.17.1",

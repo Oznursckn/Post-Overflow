@@ -18,10 +18,10 @@ export default class Comment extends BaseEntity {
   body: string;
 
   @Column()
-  like: number;
+  likes: number;
 
   @Column()
-  dislike: number;
+  dislikes: number;
 
   @Column()
   dateCreated: Date;

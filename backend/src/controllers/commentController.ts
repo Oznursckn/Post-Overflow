@@ -25,7 +25,17 @@ router.delete("/:id", async (req, res, next) => {
 
 router.post("/:id/like", async (req, res, next) => {
   try {
-    res.json(await commentService.like(req.params.id));
+    await commentService.like(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:id/unlike", async (req, res, next) => {
+  try {
+    await commentService.unlike(req.params.id, req.body.userId);
+    res.send();
   } catch (error) {
     next(error);
   }
@@ -33,7 +43,17 @@ router.post("/:id/like", async (req, res, next) => {
 
 router.post("/:id/dislike", async (req, res, next) => {
   try {
-    res.json(await commentService.dislike(req.params.id));
+    await commentService.dislike(req.params.id, req.body.userId);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:id/undislike", async (req, res, next) => {
+  try {
+    await commentService.undislike(req.params.id, req.body.userId);
+    res.send();
   } catch (error) {
     next(error);
   }
