@@ -3,6 +3,7 @@ import { createConnection } from "typeorm";
 import Post from "../models/Post";
 import User from "../models/User";
 import Comment from "../models/Comment";
+import Tag from "../models/Tag";
 
 export async function connectToDatabase() {
   const connection = await createConnection({
@@ -12,7 +13,7 @@ export async function connectToDatabase() {
     username: "postgres",
     password: "1234",
     database: "post-overflow",
-    entities: [User, Post, Comment],
+    entities: [Post,User,Comment,Tag],
     synchronize: true,
   });
   console.log(`${`[Server]`.green} Veritabanına Bağlanıldı`);
