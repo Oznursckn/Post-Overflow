@@ -40,7 +40,7 @@ export default class Post extends BaseEntity {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @ManyToMany(() => Tag,(tag) => tag.posts )
+  @ManyToMany(() => Tag,(tag) => tag.posts, {cascade:true} )
   @JoinTable()
   tags: Tag[];
   
