@@ -6,9 +6,12 @@ import {
   BaseEntity,
   JoinColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import User from "./User";
 import Comment from "./Comment";
+import Tag from "./Tag";
 
 @Entity()
 export default class Post extends BaseEntity {
@@ -36,4 +39,9 @@ export default class Post extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
+
+  @ManyToMany(() => Tag,(tag) => tag.posts )
+  @JoinTable()
+  tags: Tag[];
+  
 }
