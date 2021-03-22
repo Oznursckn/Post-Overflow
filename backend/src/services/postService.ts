@@ -3,15 +3,36 @@ import { ApiError } from "../config/ApiError";
 import PostDto from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
-import { Connection, Like } from "typeorm";
-import { CheckMetadata } from "typeorm/metadata/CheckMetadata";
+import { Like } from "typeorm";
+import Tag from "../models/Tag";
+import tagService from "./tagService";
+import slugify from "slugify";
 
 class PostService {
   async save(postDto: PostDto) {
-    await userService.getById(postDto.userId);
+    const { body, tags, title, userId } = postDto;
+    await userService.getById(userId);
+
+    const postTags: Tag[] = [];
+
+    for (let tag of tags) {
+      tag = slugify(tag, { lower: true });
+      try {
+        postTags.push(await tagService.getByName(tag));
+      } catch (error) {
+        const newTag = new Tag();
+        newTag.name = tag;
+        postTags.push(newTag);
+      }
+    }
+
     await Post.create({
-      ...postDto,
+      title,
+      body,
+      slug: slugify(title, { lower: true }),
       likes: 0,
+      tags: postTags,
+      userId,
       dateCreated: new Date(),
     }).save();
   }
@@ -24,14 +45,15 @@ class PostService {
     }
 
     return Post.find({
-      relations: ["user"],
+      relations: ["user", "tags"],
       order: { dateCreated: "DESC" },
+      select: ["id", "likes", "slug", "title", "dateCreated"],
       where,
     });
   }
 
   async getById(id: string) {
-    const post = await Post.findOne(id, { relations: ["user"] });
+    const post = await Post.findOne(id, { relations: ["user", "tags"] });
     if (!post) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,

@@ -4,7 +4,11 @@ import newsService from "../services/newsService";
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  res.send(await newsService.getNews());
+  try {
+    res.send(await newsService.getNews());
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

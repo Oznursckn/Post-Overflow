@@ -25,6 +25,9 @@ export default class Post extends BaseEntity {
   body: string;
 
   @Column()
+  slug: string;
+
+  @Column()
   dateCreated: Date;
 
   @Column()
@@ -40,8 +43,7 @@ export default class Post extends BaseEntity {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @ManyToMany(() => Tag,(tag) => tag.posts, {cascade:true} )
+  @ManyToMany(() => Tag, (tag) => tag.posts, { cascade: true })
   @JoinTable()
   tags: Tag[];
-  
 }

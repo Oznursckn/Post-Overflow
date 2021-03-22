@@ -1,21 +1,19 @@
 import {
-    Column,
-    Entity,
-    BaseEntity,
-    ManyToMany,
-    PrimaryGeneratedColumn,
-    JoinTable
+  Column,
+  Entity,
+  BaseEntity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import Post from "./Post";
 @Entity()
 export default class Tag extends BaseEntity {
-    @PrimaryGeneratedColumn("uuid")
-    id:string;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @Column({length:50})
-    title:string;
+  @Column({ length: 50 })
+  name: string;
 
-    @ManyToMany(() => Post, (post) =>post.tags)
-    posts:Post[];
-
+  @ManyToMany(() => Post, (post) => post.tags)
+  posts: Post[];
 }
