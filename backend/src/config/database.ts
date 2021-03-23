@@ -16,6 +16,6 @@ export async function connectToDatabase() {
     entities: [Post,User,Comment,Tag],
     synchronize: true,
   });
-  console.log(`${`[Server]`.green} Veritabanına Bağlanıldı`);
+  console.log(`${`[Server]`.green} connected to database`);
   return connection;
 }

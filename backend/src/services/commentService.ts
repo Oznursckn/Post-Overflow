@@ -23,7 +23,7 @@ class CommentService {
     if (!comment) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `${id} ID ye sahip yorum bulunamadı`
+        ` Could not find the comment for that ID ${id}`
       );
     }
     return comment;
@@ -51,7 +51,7 @@ class CommentService {
 
   async like(commentId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const comment = await this.getById(commentId);
@@ -83,7 +83,7 @@ class CommentService {
 
   async unlike(commentId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const comment = await this.getById(commentId);
@@ -106,7 +106,7 @@ class CommentService {
 
   async dislike(commentId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const comment = await this.getById(commentId);
@@ -139,7 +139,7 @@ class CommentService {
 
   async undislike(commentId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const comment = await this.getById(commentId);

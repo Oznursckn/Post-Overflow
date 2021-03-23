@@ -63,7 +63,7 @@ class PostService {
     if (!post) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `${id} Id ye sahip paylaşım bulunamadı`
+        `Could not find the post for that ID ${id}`
       );
     }
     return post;
@@ -89,7 +89,7 @@ class PostService {
 
   async like(postId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const post = await this.getById(postId);
@@ -110,7 +110,7 @@ class PostService {
 
   async unlike(postId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const post = await this.getById(postId);
@@ -133,7 +133,7 @@ class PostService {
 
   async savePost(postId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const post = await this.getById(postId);
@@ -154,7 +154,7 @@ class PostService {
 
   async unsavePost(postId: string, userId: string) {
     if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId boş olamaz");
+      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
     }
 
     const post = await this.getById(postId);

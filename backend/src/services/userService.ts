@@ -14,7 +14,7 @@ class UserService {
     if (user) {
       throw new ApiError(
         StatusCodes.BAD_REQUEST,
-        "Bu email adresi kullanılmaktadır"
+        "This email is already registered"
       );
     }
     userDto.password = await bcrypt.hash(userDto.password, 10);
@@ -30,7 +30,7 @@ class UserService {
     if (!user) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `${id} id ye sahip kullanıcı bulunamadı`
+        ` Could not find the user for that ID ${id}`
       );
     }
     return user;
@@ -47,11 +47,11 @@ class UserService {
 
     if (updateUserDto.password) {
       if (!(await bcrypt.compare(updateUserDto.oldPassword, user.password))) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "Eski şifre hatalı");
+        throw new ApiError(StatusCodes.BAD_REQUEST, "The old password you have entered is incorrect ");
       }
 
       if (updateUserDto.password !== updateUserDto.passwordAgain) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "Şifreler aynı olmalı");
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Passwords must match");
       }
 
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
@@ -65,7 +65,7 @@ class UserService {
     if (!user) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `${id} id ye sahip kullanıcı bulunamadı`
+        `Could not find the user for that ID ${id} `
       );
     }
     return user;

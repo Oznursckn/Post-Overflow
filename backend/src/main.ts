@@ -26,7 +26,7 @@ async function start() {
     console.log(
       `${`[Server]`.green} API ${
         `http://localhost:${PORT}`.blue
-      } ${"Adresinde Çalışmaya Başladı"}\n`
+      } ${"started working at"}\n`
     )
   );
 }
