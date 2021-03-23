@@ -3,6 +3,8 @@ import userService from "../services/userService";
 import postService from "../services/postService";
 import { StatusCodes } from "http-status-codes";
 import commentService from "../services/commentService";
+import { validation } from "../middlewares/validation";
+import { UserDto, UpdateUserDto } from "../dto/userDto";
 
 const router = express.Router();
 
@@ -10,7 +12,7 @@ router.get("/", async (req, res) => {
   res.json(await userService.getAll());
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", validation(UserDto), async (req, res, next) => {
   try {
     await userService.save(req.body);
     res.status(StatusCodes.CREATED).send();
@@ -36,7 +38,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", validation(UpdateUserDto), async (req, res, next) => {
   try {
     await userService.update(req.params.id, req.body);
     res.send();

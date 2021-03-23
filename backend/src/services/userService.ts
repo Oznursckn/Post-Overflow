@@ -1,6 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import UserDto from "../dto/userDto";
+import { UserDto, UpdateUserDto } from "../dto/userDto";
 import { ApiError } from "../config/ApiError";
 import { StatusCodes } from "http-status-codes";
 
@@ -41,11 +41,22 @@ class UserService {
     await User.delete(user.id);
   }
 
-  async update(id: string, updateUserDto: Partial<UserDto>) {
+  // TODO: Burası düzeltilecek
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.getById(id);
+
     if (updateUserDto.password) {
+      if (!(await bcrypt.compare(updateUserDto.oldPassword, user.password))) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Eski şifre hatalı");
+      }
+
+      if (updateUserDto.password !== updateUserDto.passwordAgain) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Şifreler aynı olmalı");
+      }
+
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
+
     await User.update(user, updateUserDto);
   }
 

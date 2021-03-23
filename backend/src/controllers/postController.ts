@@ -1,21 +1,24 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import { PostDto, PostQueryDto } from "../dto/postDto";
+import { ReactionDto } from "../dto/reactionDto";
+import { queryValidation, validation } from "../middlewares/validation";
+import { plainToClass } from "class-transformer";
 
 import commentService from "../services/commentService";
 import postService from "../services/postService";
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const search = req.query.search ? String(req.query.search) : null;
+router.get("/", queryValidation(PostQueryDto), async (req, res, next) => {
   try {
-    res.send(await postService.getAll(search));
+    res.send(await postService.getAll(plainToClass(PostQueryDto, req.query)));
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", validation(PostDto), async (req, res, next) => {
   try {
     await postService.save(req.body);
     res.status(StatusCodes.CREATED).send();
@@ -49,7 +52,7 @@ router.get("/:id/comments", async (req, res, next) => {
   }
 });
 
-router.post("/:id/like", async (req, res, next) => {
+router.post("/:id/like", validation(ReactionDto), async (req, res, next) => {
   try {
     await postService.like(req.params.id, req.body.userId);
     res.send();
@@ -58,7 +61,7 @@ router.post("/:id/like", async (req, res, next) => {
   }
 });
 
-router.post("/:id/unlike", async (req, res, next) => {
+router.post("/:id/unlike", validation(ReactionDto), async (req, res, next) => {
   try {
     await postService.unlike(req.params.id, req.body.userId);
     res.send();
@@ -67,7 +70,7 @@ router.post("/:id/unlike", async (req, res, next) => {
   }
 });
 
-router.post("/:id/save", async (req, res, next) => {
+router.post("/:id/save", validation(ReactionDto), async (req, res, next) => {
   try {
     await postService.savePost(req.params.id, req.body.userId);
     res.send();
@@ -76,7 +79,7 @@ router.post("/:id/save", async (req, res, next) => {
   }
 });
 
-router.post("/:id/unsave", async (req, res, next) => {
+router.post("/:id/unsave", validation(ReactionDto), async (req, res, next) => {
   try {
     await postService.unsavePost(req.params.id, req.body.userId);
     res.send();

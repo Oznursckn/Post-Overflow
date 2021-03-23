@@ -3,7 +3,7 @@ import express from "express";
 import colors from "colors";
 import morgan from "morgan";
 
-import logger from "./config/logger";
+import logger from "./middlewares/logger";
 import { connectToDatabase } from "./config/database";
 import controllers from "./controllers";
 

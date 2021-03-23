@@ -1,5 +1,4 @@
 import Tag from "../models/Tag";
-import TagDto from "../dto/tagDto";
 import { ApiError } from "../config/ApiError";
 import { StatusCodes } from "http-status-codes";
 

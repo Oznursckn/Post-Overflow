@@ -1,5 +1,5 @@
 import { ApiError } from "../config/ApiError";
-import CommentDto from "../dto/commentDto";
+import {CommentDto} from "../dto/commentDto";
 import Comment from "../models/Comment";
 import { StatusCodes } from "http-status-codes";
 import postService from "./postService";

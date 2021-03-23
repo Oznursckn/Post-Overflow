@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
-import PostDto from "../dto/postDto";
+import { PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
-import { Like } from "typeorm";
+import { ILike } from "typeorm";
 import Tag from "../models/Tag";
 import tagService from "./tagService";
 import slugify from "slugify";
@@ -37,11 +37,12 @@ class PostService {
     }).save();
   }
 
-  async getAll(search: string) {
+  async getAll(query: PostQueryDto) {
+    const { search } = query;
     let where = {};
 
     if (search) {
-      where = { title: Like(`%${search}%`) };
+      where = { title: ILike(`%${search}%`) };
     }
 
     return Post.find({
