@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class PostDto {
   @IsNotEmpty()
@@ -23,4 +24,9 @@ export class PostQueryDto {
   @IsNotEmpty()
   @IsString()
   search: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  page:number;
 }

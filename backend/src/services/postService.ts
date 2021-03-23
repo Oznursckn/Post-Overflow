@@ -9,7 +9,8 @@ import tagService from "./tagService";
 import slugify from "slugify";
 
 class PostService {
-  async save(postDto: PostDto) {
+
+    async save(postDto: PostDto) {
     const { body, tags, title, userId } = postDto;
     await userService.getById(userId);
 
@@ -38,18 +39,22 @@ class PostService {
   }
 
   async getAll(query: PostQueryDto) {
-    const { search } = query;
+
+    const { search,page } = query;
     let where = {};
+
 
     if (search) {
       where = { title: ILike(`%${search}%`) };
     }
-
+    const take =5;
     return Post.find({
       relations: ["user", "tags"],
       order: { dateCreated: "DESC" },
       select: ["id", "likes", "slug", "title", "dateCreated"],
       where,
+      take,
+      skip:(page*take)-take
     });
   }
 
