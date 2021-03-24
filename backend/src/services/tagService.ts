@@ -12,7 +12,7 @@ class TagService {
     if (!tag) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        ` Could not find the tag for that ID ${id}`
+        ` Could not find the tag for ID: ${id}`
       );
     }
     return tag;

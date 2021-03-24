@@ -30,7 +30,7 @@ class UserService {
     if (!user) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        ` Could not find the user for that ID ${id}`
+        ` Could not find the user for ID: ${id}`
       );
     }
     return user;
@@ -47,7 +47,7 @@ class UserService {
 
     if (updateUserDto.password) {
       if (!(await bcrypt.compare(updateUserDto.oldPassword, user.password))) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "The old password you have entered is incorrect ");
+        throw new ApiError(StatusCodes.BAD_REQUEST, "The old password is incorrect ");
       }
 
       if (updateUserDto.password !== updateUserDto.passwordAgain) {
@@ -65,7 +65,7 @@ class UserService {
     if (!user) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `Could not find the user for that ID ${id} `
+        `Could not find the user for ID: ${id} `
       );
     }
     return user;

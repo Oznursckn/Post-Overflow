@@ -1,11 +1,13 @@
-import { StatusCodes } from "http-status-codes";
+import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
 export class ApiValidationError {
-  readonly status: number;
+  readonly code: StatusCodes;
+  readonly status: string;
   errors: string[];
 
   constructor(errors: string[]) {
-    this.status = StatusCodes.BAD_REQUEST;
+    this.code = StatusCodes.BAD_REQUEST;
+    this.status = getReasonPhrase(StatusCodes.BAD_REQUEST);
     this.errors = errors;
   }
 }

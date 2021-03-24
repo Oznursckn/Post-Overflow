@@ -23,7 +23,7 @@ class CommentService {
     if (!comment) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        ` Could not find the comment for that ID ${id}`
+        ` Could not find the comment for ID: ${id}`
       );
     }
     return comment;
@@ -50,10 +50,6 @@ class CommentService {
   }
 
   async like(commentId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
-
     const comment = await this.getById(commentId);
     const user = await userService.getUserWithLikedAndDislikedComments(userId);
 
@@ -82,10 +78,6 @@ class CommentService {
   }
 
   async unlike(commentId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
-
     const comment = await this.getById(commentId);
     const user = await userService.getUserWithLikedAndDislikedComments(userId);
 
@@ -105,10 +97,6 @@ class CommentService {
   }
 
   async dislike(commentId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
-
     const comment = await this.getById(commentId);
     const user = await userService.getUserWithLikedAndDislikedComments(userId);
 
@@ -138,10 +126,6 @@ class CommentService {
   }
 
   async undislike(commentId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
-
     const comment = await this.getById(commentId);
     const user = await userService.getUserWithLikedAndDislikedComments(userId);
 

@@ -63,7 +63,7 @@ class PostService {
     if (!post) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
-        `Could not find the post for that ID ${id}`
+        `Could not find the post for ID: ${id}`
       );
     }
     return post;
@@ -88,9 +88,6 @@ class PostService {
   }
 
   async like(postId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
 
     const post = await this.getById(postId);
     const user = await userService.getUserWithLikedPosts(userId);
@@ -109,9 +106,6 @@ class PostService {
   }
 
   async unlike(postId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
 
     const post = await this.getById(postId);
     const user = await userService.getUserWithLikedPosts(userId);
@@ -132,9 +126,6 @@ class PostService {
   }
 
   async savePost(postId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
 
     const post = await this.getById(postId);
     const user = await userService.getUserWithSavedPosts(userId);
@@ -153,9 +144,6 @@ class PostService {
   }
 
   async unsavePost(postId: string, userId: string) {
-    if (!userId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, "userId can not be blank");
-    }
 
     const post = await this.getById(postId);
     const user = await userService.getUserWithSavedPosts(userId);

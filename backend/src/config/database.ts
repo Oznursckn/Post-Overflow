@@ -16,6 +16,6 @@ export async function connectToDatabase() {
     entities: [Post,User,Comment,Tag],
     synchronize: true,
   });
-  console.log(`${`[Server]`.green} connected to database`);
+  console.log(`${`[Server]`.green} Connected to database`);
   return connection;
 }

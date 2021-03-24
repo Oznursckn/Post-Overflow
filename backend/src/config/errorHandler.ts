@@ -9,9 +9,9 @@ export function errorHandler(
   next: NextFunction
 ) {
   if (err instanceof ApiError || err instanceof ApiValidationError) {
-    res.status(err.status).json(err);
+    res.status(err.code).json(err);
   } else {
     const apiError = new ApiError(500, err.message);
-    res.status(apiError.status).json(apiError);
+    res.status(apiError.code).json(apiError);
   }
 }

@@ -24,9 +24,9 @@ async function start() {
 
   app.listen(PORT, () =>
     console.log(
-      `${`[Server]`.green} API ${
-        `http://localhost:${PORT}`.blue
-      } ${"started working at"}\n`
+      `${`[Server]`.green} API started on ${
+        `http://localhost:${PORT}`.underline.blue
+      }\n`
     )
   );
 }
