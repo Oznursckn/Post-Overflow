@@ -33,6 +33,10 @@ export default class Post extends BaseEntity {
   @Column()
   likes: number;
 
+  @ManyToMany(() => Tag, (tag) => tag.posts, { cascade: true })
+  @JoinTable()
+  tags: Tag[];
+
   @Column({ type: "uuid", select: false, nullable: true })
   userId: string;
 
@@ -42,8 +46,4 @@ export default class Post extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
-
-  @ManyToMany(() => Tag, (tag) => tag.posts, { cascade: true })
-  @JoinTable()
-  tags: Tag[];
 }

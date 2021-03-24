@@ -1,5 +1,13 @@
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
+import { Expose, Transform, Type } from "class-transformer";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from "class-validator";
+import Post from "../models/Post";
 
 export class PostDto {
   @IsNotEmpty()
@@ -24,9 +32,19 @@ export class PostQueryDto {
   @IsNotEmpty()
   @IsString()
   search: string;
+
   @IsOptional()
   @IsNotEmpty()
   @IsNumber()
+  @Min(1)
   @Type(() => Number)
-  page:number;
+  page: number;
+}
+
+export class PaginatedPostsDto {
+  total: number;
+  perPage: number;
+  currentPage: number;
+  numberOfPages: number;
+  data: Post[];
 }

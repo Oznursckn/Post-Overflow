@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { UserDto, UpdateUserDto } from "../dto/userDto";
 import { ApiError } from "../config/ApiError";
 import { StatusCodes } from "http-status-codes";
+import { plainToClass } from "class-transformer";
 
 class UserService {
   async getAll() {
@@ -41,13 +42,15 @@ class UserService {
     await User.delete(user.id);
   }
 
-  // TODO: Burası düzeltilecek
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.getById(id);
 
     if (updateUserDto.password) {
       if (!(await bcrypt.compare(updateUserDto.oldPassword, user.password))) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "The old password is incorrect ");
+        throw new ApiError(
+          StatusCodes.BAD_REQUEST,
+          "The old password is incorrect "
+        );
       }
 
       if (updateUserDto.password !== updateUserDto.passwordAgain) {
@@ -57,7 +60,13 @@ class UserService {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
-    await User.update(user, updateUserDto);
+    await User.update(
+      user,
+      plainToClass(User, updateUserDto, {
+        excludeExtraneousValues: true,
+        exposeUnsetFields: false,
+      })
+    );
   }
 
   private async getUserWithRelations(id: string, relations: string[]) {

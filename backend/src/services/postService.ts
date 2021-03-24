@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
-import { PostDto, PostQueryDto } from "../dto/postDto";
+import { PaginatedPostsDto, PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
 import { ILike } from "typeorm";
@@ -9,8 +9,7 @@ import tagService from "./tagService";
 import slugify from "slugify";
 
 class PostService {
-
-    async save(postDto: PostDto) {
+  async save(postDto: PostDto) {
     const { body, tags, title, userId } = postDto;
     await userService.getById(userId);
 
@@ -39,23 +38,32 @@ class PostService {
   }
 
   async getAll(query: PostQueryDto) {
-
-    const { search,page } = query;
+    const { search, page } = query;
     let where = {};
-
 
     if (search) {
       where = { title: ILike(`%${search}%`) };
     }
-    const take =5;
-    return Post.find({
-      relations: ["user", "tags"],
+    const take = 5;
+
+    const [posts, count] = await Post.findAndCount({
+      relations: ["tags", "user"],
       order: { dateCreated: "DESC" },
       select: ["id", "likes", "slug", "title", "dateCreated"],
       where,
       take,
-      skip:(page*take)-take
+      skip: page * take - take,
     });
+
+    const paginatedPostsDto: PaginatedPostsDto = {
+      total: count,
+      perPage: take,
+      currentPage: page ? page : 1,
+      numberOfPages: Math.ceil(count / take),
+      data: posts,
+    };
+
+    return paginatedPostsDto;
   }
 
   async getById(id: string) {
@@ -88,7 +96,6 @@ class PostService {
   }
 
   async like(postId: string, userId: string) {
-
     const post = await this.getById(postId);
     const user = await userService.getUserWithLikedPosts(userId);
 
@@ -106,7 +113,6 @@ class PostService {
   }
 
   async unlike(postId: string, userId: string) {
-
     const post = await this.getById(postId);
     const user = await userService.getUserWithLikedPosts(userId);
 
@@ -126,7 +132,6 @@ class PostService {
   }
 
   async savePost(postId: string, userId: string) {
-
     const post = await this.getById(postId);
     const user = await userService.getUserWithSavedPosts(userId);
 
@@ -144,7 +149,6 @@ class PostService {
   }
 
   async unsavePost(postId: string, userId: string) {
-
     const post = await this.getById(postId);
     const user = await userService.getUserWithSavedPosts(userId);
 

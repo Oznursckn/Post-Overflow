@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import express from "express";
 import colors from "colors";
-import morgan from "morgan";
 
 import logger from "./middlewares/logger";
 import { connectToDatabase } from "./config/database";
@@ -13,7 +12,7 @@ async function start() {
 
   colors.enable();
 
-  app.use(morgan(logger));
+  app.use(logger);
   app.use(express.json());
   app.use("/api", controllers);
 

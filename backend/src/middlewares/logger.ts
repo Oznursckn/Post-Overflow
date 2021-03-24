@@ -1,3 +1,4 @@
+import morgan from "morgan";
 import { Request, Response } from "express";
 
 function getStatus(tokens, req: Request, res: Response) {
@@ -32,7 +33,7 @@ function getMethod(tokens, req: Request, res: Response) {
   }
 }
 
-export default function (tokens, req: Request, res: Response) {
+export default morgan((tokens, req: Request, res: Response) => {
   return [
     "[Log]".green,
     getMethod(tokens, req, res),
@@ -42,4 +43,4 @@ export default function (tokens, req: Request, res: Response) {
     tokens["response-time"](req, res),
     "ms",
   ].join(" ");
-}
+});

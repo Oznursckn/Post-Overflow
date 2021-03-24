@@ -9,27 +9,35 @@ import {
 } from "typeorm";
 import Post from "./Post";
 import Comment from "./Comment";
+import { Expose } from "class-transformer";
 
 @Entity()
 export default class User extends BaseEntity {
+  @Expose()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Expose()
   @Column()
   firstName: string;
 
+  @Expose()
   @Column()
   lastName: string;
 
+  @Expose()
   @Column()
   email: string;
 
+  @Expose()
   @Column()
   password: string;
 
+  @Expose()
   @Column()
   dateCreated: Date;
 
+  @Expose()
   @Column({ type: "text", nullable: true })
   about: string;
 

@@ -40,7 +40,9 @@ export function queryValidation<T extends Object>(
   type: ClassConstructor<T>
 ): RequestHandler {
   return async (req, res, next) => {
-    const objectToValidate: T = plainToClass(type, req.query);
+    const objectToValidate: T = plainToClass(type, req.query, {
+      exposeUnsetFields: false,
+    });
 
     try {
       await validateObject(objectToValidate);
