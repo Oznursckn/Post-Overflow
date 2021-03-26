@@ -1,11 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
-import { PaginatedPostsDto, PostDto, PostQueryDto } from "../dto/postDto";
+import { PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
 import Tag from "../models/Tag";
 import tagService from "./tagService";
 import slugify from "slugify";
+import PaginationDto from "../dto/paginationDto";
 
 class PostService {
   private getWithPagination(query: PostQueryDto) {
@@ -68,7 +69,7 @@ class PostService {
       query
     ).getManyAndCount();
 
-    const paginatedPostsDto: PaginatedPostsDto = {
+    const paginatedPostsDto: PaginationDto = {
       total: count,
       perPage: take,
       currentPage: page ? page : 1,
@@ -105,7 +106,7 @@ class PostService {
       .andWhere("user.id = :id", { id: user.id })
       .getManyAndCount();
 
-    const paginatedPostsDto: PaginatedPostsDto = {
+    const paginatedPostsDto: PaginationDto = {
       total: count,
       perPage: take,
       currentPage: page ? page : 1,

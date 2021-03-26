@@ -40,11 +40,3 @@ export class PostQueryDto {
   @Type(() => Number)
   page: number;
 }
-
-export class PaginatedPostsDto {
-  total: number;
-  perPage: number;
-  currentPage: number;
-  numberOfPages: number;
-  data: Post[];
-}
