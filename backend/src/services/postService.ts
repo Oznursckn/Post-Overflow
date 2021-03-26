@@ -3,12 +3,35 @@ import { ApiError } from "../config/ApiError";
 import { PaginatedPostsDto, PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
-import { ILike } from "typeorm";
 import Tag from "../models/Tag";
 import tagService from "./tagService";
 import slugify from "slugify";
 
 class PostService {
+  private getWithPagination(query: PostQueryDto) {
+    const { search, page = 1 } = query;
+    const take = 5;
+
+    return Post.createQueryBuilder("post")
+      .leftJoin("post.user", "user")
+      .select([
+        "post.id",
+        "post.likes",
+        "post.slug",
+        "post.title",
+        "post.dateCreated",
+        "user.id",
+        "user.firstName",
+        "user.lastName",
+      ])
+      .where(search ? "post.title ILIKE :search" : null, {
+        search: `%${search}%`,
+      })
+      .take(take)
+      .skip(page * take - take)
+      .orderBy("post.dateCreated", "DESC");
+  }
+
   async save(postDto: PostDto) {
     const { body, tags, title, userId } = postDto;
     await userService.getById(userId);
@@ -38,22 +61,12 @@ class PostService {
   }
 
   async getAll(query: PostQueryDto) {
-    const { search, page } = query;
-    let where = {};
-
-    if (search) {
-      where = { title: ILike(`%${search}%`) };
-    }
+    const { page = 1 } = query;
     const take = 5;
 
-    const [posts, count] = await Post.findAndCount({
-      relations: ["tags", "user"],
-      order: { dateCreated: "DESC" },
-      select: ["id", "likes", "slug", "title", "dateCreated"],
-      where,
-      take,
-      skip: page * take - take,
-    });
+    const [posts, count] = await this.getWithPagination(
+      query
+    ).getManyAndCount();
 
     const paginatedPostsDto: PaginatedPostsDto = {
       total: count,
@@ -82,9 +95,25 @@ class PostService {
     await post.remove();
   }
 
-  async getPostsByUserId(userId: string) {
+  async getPostsByUserId(query: PostQueryDto, userId: string) {
     const user = await userService.getById(userId);
-    return await Post.find({ where: { user: user } });
+
+    const { page = 1 } = query;
+    const take = 5;
+
+    const [posts, count] = await this.getWithPagination(query)
+      .andWhere("user.id = :id", { id: user.id })
+      .getManyAndCount();
+
+    const paginatedPostsDto: PaginatedPostsDto = {
+      total: count,
+      perPage: take,
+      currentPage: page ? page : 1,
+      numberOfPages: Math.ceil(count / take),
+      data: posts,
+    };
+
+    return paginatedPostsDto;
   }
 
   async getLikedPostsByUserId(id: string) {

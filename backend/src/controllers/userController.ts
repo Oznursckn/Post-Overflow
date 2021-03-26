@@ -3,8 +3,10 @@ import userService from "../services/userService";
 import postService from "../services/postService";
 import { StatusCodes } from "http-status-codes";
 import commentService from "../services/commentService";
-import { validation } from "../middlewares/validation";
+import { queryValidation, validation } from "../middlewares/validation";
 import { UserDto, UpdateUserDto } from "../dto/userDto";
+import { PostQueryDto } from "../dto/postDto";
+import { plainToClass } from "class-transformer";
 
 const router = express.Router();
 
@@ -47,13 +49,22 @@ router.put("/:id", validation(UpdateUserDto), async (req, res, next) => {
   }
 });
 
-router.get("/:id/posts", async (req, res, next) => {
-  try {
-    res.json(await postService.getPostsByUserId(req.params.id));
-  } catch (error) {
-    next(error);
+router.get(
+  "/:id/posts",
+  queryValidation(PostQueryDto),
+  async (req, res, next) => {
+    try {
+      res.json(
+        await postService.getPostsByUserId(
+          plainToClass(PostQueryDto, req.query),
+          req.params.id
+        )
+      );
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get("/:id/liked-posts", async (req, res, next) => {
   try {
