@@ -1,4 +1,4 @@
-import { Expose, Transform, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import {
   IsNotEmpty,
   IsNumber,
@@ -7,7 +7,6 @@ import {
   IsUUID,
   Min,
 } from "class-validator";
-import Post from "../models/Post";
 
 export class PostDto {
   @IsNotEmpty()
