@@ -6,6 +6,7 @@ import postController from "./postController";
 import commentController from "./commentController";
 import newsController from "./newsController";
 import tagController from "./tagController";
+import authController from "./authController";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use("/posts", postController);
 router.use("/comments", commentController);
 router.use("/news", newsController);
 router.use("/tags", tagController);
+router.use("/auth", authController);
 
 router.use(errorHandler);
 

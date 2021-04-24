@@ -9,7 +9,7 @@ import controllers from "./controllers";
 async function start() {
   const app = express();
   const PORT = 5000;
-
+  
   colors.enable();
 
   app.use(logger);
