@@ -1,35 +1,25 @@
 import express from "express";
+import { LoginDto } from "../dto/authDto";
+import { validation } from "../middlewares/validation";
 import authService from "../services/authService";
 
 const router = express.Router();
 
-router.post("/login",validation(loginDto), async (req, res, next) => {
-    try {
-        await authService.login(req.body);
-        res.status(StatusCodes.LOGIN_FAILURE).send);
-    } catch (error) {
-        next(error);
-    }
+router.post("/login", validation(LoginDto), async (req, res, next) => {
+  try {
+    res.json(await authService.login(req.body, res));
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.post("/logout",validation(loginDto), async (req, res, next) => {
-    try {
-        await authService.logout(req.body);
-        res.status(StatusCodes.LOGOUT_FAILURE).send);
-    } catch (error) {
-        next(error);
-    })
-});
-
-router.post("/refresh",validation(loginDto), async (req, res, next) => {
-    try {
-        await authService.refresh(req.body);
-        res.status(StatusCodes.REFRESH_FAILURE).send);
-    } catch (error) {
-        next(error);
-    }
+router.post("/logout", async (req, res, next) => {
+  try {
+    await authService.logout(req.cookies.token, res);
+    res.send();
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;
-
-

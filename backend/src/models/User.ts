@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import Post from "./Post";
 import Comment from "./Comment";
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 
 @Entity()
 export default class User extends BaseEntity {
@@ -40,6 +40,10 @@ export default class User extends BaseEntity {
   @Expose()
   @Column({ type: "text", nullable: true })
   about: string;
+
+  @Exclude()
+  @Column({ nullable: true })
+  token: string;
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];

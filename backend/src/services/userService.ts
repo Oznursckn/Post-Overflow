@@ -26,6 +26,11 @@ class UserService {
     }).save();
   }
 
+  async getByEmail(email: string) {
+    const user = await User.findOne({ where: { email } });
+    return user;
+  }
+
   async getById(id: string) {
     const user = await User.findOne(id);
     if (!user) {
@@ -93,6 +98,16 @@ class UserService {
       "likedComments",
       "dislikedComments",
     ]);
+  }
+
+  async saveToken(token: string, user: User) {
+    user.token = token;
+    await user.save();
+  }
+
+  async removeToken(user: User) {
+    user.token = null;
+    await user.save();
   }
 }
 

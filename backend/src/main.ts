@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import express from "express";
+import dotenv from "dotenv";
 import colors from "colors";
+import cookieParser from "cookie-parser";
 
 import logger from "./middlewares/logger";
 import { connectToDatabase } from "./config/database";
@@ -9,10 +11,12 @@ import controllers from "./controllers";
 async function start() {
   const app = express();
   const PORT = 5000;
-  
+
+  dotenv.config();
   colors.enable();
 
   app.use(logger);
+  app.use(cookieParser());
   app.use(express.json());
   app.use("/api", controllers);
 
