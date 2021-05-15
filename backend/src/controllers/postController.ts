@@ -7,6 +7,8 @@ import { plainToClass } from "class-transformer";
 
 import commentService from "../services/commentService";
 import postService from "../services/postService";
+import { jwtAuthMiddleware } from "../middlewares/jwtAuth";
+import { postAuth } from "../middlewares/postAuth";
 
 const router = express.Router();
 
@@ -18,14 +20,20 @@ router.get("/", queryValidation(PostQueryDto), async (req, res, next) => {
   }
 });
 
-router.post("/", validation(PostDto), async (req, res, next) => {
-  try {
-    await postService.save(req.body);
-    res.status(StatusCodes.CREATED).send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/",
+  jwtAuthMiddleware,
+  validation(PostDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await postService.save(req.body);
+      res.status(StatusCodes.CREATED).send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get("/:id", async (req, res, next) => {
   try {
@@ -35,7 +43,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", jwtAuthMiddleware, postAuth, async (req, res, next) => {
   try {
     await postService.delete(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
@@ -52,40 +60,64 @@ router.get("/:id/comments", async (req, res, next) => {
   }
 });
 
-router.post("/:id/like", validation(ReactionDto), async (req, res, next) => {
-  try {
-    await postService.like(req.params.id, req.body.userId);
-    res.send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/:id/like",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await postService.like(req.params.id, req.body.userId);
+      res.send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post("/:id/unlike", validation(ReactionDto), async (req, res, next) => {
-  try {
-    await postService.unlike(req.params.id, req.body.userId);
-    res.send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/:id/unlike",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await postService.unlike(req.params.id, req.body.userId);
+      res.send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post("/:id/save", validation(ReactionDto), async (req, res, next) => {
-  try {
-    await postService.savePost(req.params.id, req.body.userId);
-    res.send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/:id/save",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await postService.savePost(req.params.id, req.body.userId);
+      res.send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post("/:id/unsave", validation(ReactionDto), async (req, res, next) => {
-  try {
-    await postService.unsavePost(req.params.id, req.body.userId);
-    res.send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/:id/unsave",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await postService.unsavePost(req.params.id, req.body.userId);
+      res.send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 export default router;
