@@ -3,21 +3,28 @@ import { StatusCodes } from "http-status-codes";
 import { CommentDto } from "../dto/commentDto";
 import { ReactionDto } from "../dto/reactionDto";
 import { validation } from "../middlewares/validation";
-
 import commentService from "../services/commentService";
+import { jwtAuthMiddleware } from "../middlewares/jwtAuth";
+import {postAuth} from "../middlewares/postAuth";
 
 const router = express.Router();
 
-router.post("/", validation(CommentDto), async (req, res, next) => {
-  try {
-    await commentService.save(req.body);
-    res.status(StatusCodes.CREATED).send();
-  } catch (error) {
-    next(error);
+router.post(
+  "/",
+  jwtAuthMiddleware,
+  validation(CommentDto),
+  postAuth,
+  async (req, res, next) => {
+    try {
+      await commentService.save(req.body);
+      res.status(StatusCodes.CREATED).send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", jwtAuthMiddleware,postAuth, async (req, res, next) => {
   try {
     await commentService.delete(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
@@ -26,7 +33,11 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/:id/like", validation(ReactionDto), async (req, res, next) => {
+router.post("/:id/like",
+jwtAuthMiddleware,
+ validation(ReactionDto), 
+ postAuth,
+ async (req, res, next) => {
   try {
     await commentService.like(req.params.id, req.body.userId);
     res.send();
@@ -35,7 +46,11 @@ router.post("/:id/like", validation(ReactionDto), async (req, res, next) => {
   }
 });
 
-router.post("/:id/unlike", validation(ReactionDto), async (req, res, next) => {
+router.post("/:id/unlike",
+jwtAuthMiddleware,
+ validation(ReactionDto),
+ postAuth,
+  async (req, res, next) => {
   try {
     await commentService.unlike(req.params.id, req.body.userId);
     res.send();
@@ -44,7 +59,10 @@ router.post("/:id/unlike", validation(ReactionDto), async (req, res, next) => {
   }
 });
 
-router.post("/:id/dislike", validation(ReactionDto), async (req, res, next) => {
+router.post("/:id/dislike",
+jwtAuthMiddleware, validation(ReactionDto),
+postAuth,
+ async (req, res, next) => {
   try {
     await commentService.dislike(req.params.id, req.body.userId);
     res.send();
@@ -55,7 +73,9 @@ router.post("/:id/dislike", validation(ReactionDto), async (req, res, next) => {
 
 router.post(
   "/:id/undislike",
+  jwtAuthMiddleware,
   validation(ReactionDto),
+  postAuth,
   async (req, res, next) => {
     try {
       await commentService.undislike(req.params.id, req.body.userId);

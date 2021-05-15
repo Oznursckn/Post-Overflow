@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
 import jwt from "jsonwebtoken";
 import postService from "../services/postService";
+import commentService from "../services/commentService";
 
 export async function postAuth(
   req: Request,
