@@ -1,9 +1,13 @@
+import { getReasonPhrase, StatusCodes } from "http-status-codes";
+
 export class ApiError {
-  status: number;
+  code: StatusCodes;
+  readonly status: string;
   message: string;
 
-  constructor(status: number, message: string) {
-    this.status = status;
+  constructor(code: StatusCodes, message: string) {
+    this.code = code;
+    this.status = getReasonPhrase(code);
     this.message = message;
   }
 }

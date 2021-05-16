@@ -9,9 +9,7 @@ module.exports = {
   target: "node",
   externalsPresets: { node: true },
   externals: [
-    nodeExternals({
-      allowlist: ["express", "reflect-metadata", "colors", "morgan"],
-    }),
+    nodeExternals(),
   ],
   resolve: {
     extensions: [".ts", ".js"],

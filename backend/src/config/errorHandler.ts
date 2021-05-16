@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ApiError } from "./ApiError";
+import { ApiValidationError } from "./ApiValidationError";
 
 export function errorHandler(
   err,
@@ -7,10 +8,10 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  if (err instanceof ApiError) {
-    res.status(err.status).json(err);
+  if (err instanceof ApiError || err instanceof ApiValidationError) {
+    res.status(err.code).json(err);
   } else {
     const apiError = new ApiError(500, err.message);
-    res.status(apiError.status).json(apiError);
+    res.status(apiError.code).json(apiError);
   }
 }

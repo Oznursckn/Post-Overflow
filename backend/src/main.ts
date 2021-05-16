@@ -1,9 +1,10 @@
 import "reflect-metadata";
 import express from "express";
+import dotenv from "dotenv";
 import colors from "colors";
-import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
-import logger from "./config/logger";
+import logger from "./middlewares/logger";
 import { connectToDatabase } from "./config/database";
 import controllers from "./controllers";
 
@@ -11,9 +12,11 @@ async function start() {
   const app = express();
   const PORT = 5000;
 
+  dotenv.config();
   colors.enable();
 
-  app.use(morgan(logger));
+  app.use(logger);
+  app.use(cookieParser());
   app.use(express.json());
   app.use("/api", controllers);
 
@@ -24,9 +27,9 @@ async function start() {
 
   app.listen(PORT, () =>
     console.log(
-      `${`[Server]`.green} API ${
-        `http://localhost:${PORT}`.blue
-      } ${"Adresinde Çalışmaya Başladı"}\n`
+      `${`[Server]`.green} API started on ${
+        `http://localhost:${PORT}`.underline.blue
+      }\n`
     )
   );
 }
