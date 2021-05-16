@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
 import jwt from "jsonwebtoken";
-import postService from "../services/postService";
+import commentService from "../services/commentService";
 
-export async function postAuth(
+export async function commentAuth(
   req: Request,
   res: Response,
   next: NextFunction
@@ -13,7 +13,7 @@ export async function postAuth(
   const decodedToken = jwt.decode(token);
 
   const userId = req.body.userId;
-  const postIdParam = req.params.id;
+  const commentIdParam = req.params.id;
 
   if (userId) {
     if (decodedToken.sub !== userId) {
@@ -23,9 +23,9 @@ export async function postAuth(
     }
   }
 
-  if (postIdParam) {
-    const post = await postService.getById(postIdParam);
-    if (decodedToken.sub !== post.user.id) {
+  if (commentIdParam) {
+    const comment = await commentService.getById(commentIdParam);
+    if (decodedToken.sub !== comment.user.id) {
       const error = new ApiError(StatusCodes.FORBIDDEN, "Forbidden");
       next(error);
       return;

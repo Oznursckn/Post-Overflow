@@ -3,7 +3,6 @@ import { StatusCodes } from "http-status-codes";
 import { ApiError } from "../config/ApiError";
 import jwt from "jsonwebtoken";
 import userService from "../services/userService";
-import commentService from "../services/commentService";
 import bcrypt from "bcrypt";
 
 export async function jwtAuthMiddleware(
@@ -19,15 +18,20 @@ export async function jwtAuthMiddleware(
     return;
   }
 
-  const decodedToken = jwt.decode(token);
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.decode(token);
 
-  const user = await userService.getById(decodedToken.sub);
+    const user = await userService.getById(decodedToken.sub);
 
-  if (!user.token || !(await bcrypt.compare(token, user.token))) {
-    const error = new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized");
-    next(error);
-    return;
+    if (!user.token || !(await bcrypt.compare(token, user.token))) {
+      const error = new ApiError(StatusCodes.UNAUTHORIZED, "Unauthorized");
+      next(error);
+      return;
+    }
+
+    next();
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNAUTHORIZED, error.message));
   }
-
-  next();
 }

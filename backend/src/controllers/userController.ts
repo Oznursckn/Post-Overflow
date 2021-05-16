@@ -7,6 +7,8 @@ import { queryValidation, validation } from "../middlewares/validation";
 import { UserDto, UpdateUserDto } from "../dto/userDto";
 import { PostQueryDto } from "../dto/postDto";
 import { plainToClass } from "class-transformer";
+import { jwtAuthMiddleware } from "../middlewares/jwtAuth";
+import { userAuth } from "../middlewares/userAuth";
 
 const router = express.Router();
 
@@ -31,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", jwtAuthMiddleware, userAuth, async (req, res, next) => {
   try {
     await userService.delete(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
@@ -40,14 +42,20 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", validation(UpdateUserDto), async (req, res, next) => {
-  try {
-    await userService.update(req.params.id, req.body);
-    res.send();
-  } catch (error) {
-    next(error);
+router.put(
+  "/:id",
+  jwtAuthMiddleware,
+  userAuth,
+  validation(UpdateUserDto),
+  async (req, res, next) => {
+    try {
+      await userService.update(req.params.id, req.body);
+      res.send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   "/:id/posts",
