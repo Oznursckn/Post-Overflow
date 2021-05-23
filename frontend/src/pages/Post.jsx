@@ -1,5 +1,4 @@
 import React from "react";
-import Post from "../components/Post";
 import Comments from "../components/post/Comments";
 import { Row, Col, Card } from "react-bootstrap";
 import { Archive, Heart } from "react-feather";
@@ -7,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Post() {
-  const [post, setPost] = useState();
+  const [postDetail, setPostDetail] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ export default function Post() {
       let response = await axios.get(
         "https://jsonplaceholder.typicode.com/posts/1"
       );
-      setPost(response.data);
+      setPostDetail(response.data);
       setLoading(false);
     }
     getPost();
@@ -40,8 +39,8 @@ export default function Post() {
           <Card className="mb-3">
             <Card.Img variant="top" src="holder.js/100px180" />
             <Card.Body>
-              <Card.Title>{post.title}</Card.Title>
-              <Card.Text>{post.body}</Card.Text>
+              <Card.Title>{postDetail.title}</Card.Title>
+              <Card.Text>{postDetail.body}</Card.Text>
               <hr/>
               <h4 className="font-font-weight-bolder">Comments</h4>
              <Comments/>

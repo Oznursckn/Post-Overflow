@@ -7,14 +7,17 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { Search } from "react-feather";
+import { Link } from "react-router-dom";
 
 export default function Layout({ children }) {
   return (
     <div className="layout">
       <Navbar bg="light" expand="lg" className="shadow">
-        <Navbar.Brand href="#home" className="navbar-logo">
-          Post Overflow
-        </Navbar.Brand>
+        <Link to="/">
+          <Navbar.Brand className="navbar-logo">
+            Post Overflow
+          </Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Form inline className="search-input">
@@ -28,10 +31,14 @@ export default function Layout({ children }) {
             </InputGroup>
           </Form>
           <div className="ml-auto">
-            <Button variant="light" className="mr-3">
-              Giriş Yap
-            </Button>
-            <Button>Üye Ol</Button>
+            <Link to="/login">
+              <Button variant="light" className="mr-3">
+                Giriş Yap
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button>Üye Ol</Button>
+            </Link>
           </div>
         </Navbar.Collapse>
       </Navbar>

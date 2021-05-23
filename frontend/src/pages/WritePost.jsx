@@ -1,4 +1,4 @@
-import { Button,Card } from "bootstrap";
+import { Button,Card } from "react-bootstrap";
 import React from "react";
 
 export default function WritePost() {
