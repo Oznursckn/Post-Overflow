@@ -1,7 +1,6 @@
 
 import Post from "../components/Post";
 import News from "../components/News";
-import PostPage from "../pages/PostPage";
 import { Row, Col } from "react-bootstrap";
 import Tag from "../components/Tags";
 import { useEffect, useState } from "react";
