@@ -1,14 +1,31 @@
-import { Navbar, Form, FormControl, Button, Container } from "react-bootstrap";
+import {
+  Navbar,
+  Form,
+  FormControl,
+  Button,
+  Container,
+  InputGroup,
+} from "react-bootstrap";
+import { Search } from "react-feather";
+
 export default function Layout({ children }) {
   return (
     <div className="layout">
       <Navbar bg="light" expand="lg" className="shadow">
-        <Navbar.Brand href="#home">Post Overflow</Navbar.Brand>
+        <Navbar.Brand href="#home" className="navbar-logo">
+          Post Overflow
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-            <Button>Search</Button>
+          <Form inline className="search-input">
+            <InputGroup>
+              <FormControl placeholder="Ara" />
+              <InputGroup.Append>
+                <InputGroup.Text>
+                  <Search />
+                </InputGroup.Text>
+              </InputGroup.Append>
+            </InputGroup>
           </Form>
           <div className="ml-auto">
             <Button variant="light" className="mr-3">

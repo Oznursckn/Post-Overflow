@@ -36,9 +36,14 @@ body,
   align-items: center;
 }
 .tags-list {
-  background-color: transparent !important;
-}
-.postpage-left{
-  
+  .list-group-item {
+    background-color: transparent;
+  }
 }
 
+.search-input {
+  .input-group-append {
+    background-color: transparent !important;
+    border-left: none !important;
+  }
+}
