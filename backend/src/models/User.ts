@@ -11,7 +11,7 @@ import Post from "./Post";
 import Comment from "./Comment";
 import { Exclude, Expose } from "class-transformer";
 
-@Entity()
+@Entity({ name: "user" })
 export default class User extends BaseEntity {
   @Expose()
   @PrimaryGeneratedColumn("uuid")

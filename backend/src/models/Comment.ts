@@ -9,7 +9,7 @@ import {
 import User from "./User";
 import Post from "./Post";
 
-@Entity()
+@Entity({ name: "comment" })
 export default class Comment extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
