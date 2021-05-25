@@ -1,4 +1,4 @@
-import Layout from "../components/Layout";
+
 import Post from "../components/Post";
 import News from "../components/News";
 import { Row, Col } from "react-bootstrap";
@@ -20,7 +20,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout>
+  
       <Row>
         <Col>
           <Tag />
@@ -34,6 +34,6 @@ export default function Home() {
           <News />
         </Col>
       </Row>
-    </Layout>
+    
   );
 }

@@ -2,7 +2,7 @@ import { ListGroup } from "react-bootstrap";
 
 export default function Tags() {
   return (
-    <ListGroup variant="flush">
+    <ListGroup variant="flush" className="tags-list">
       <ListGroup.Item>
         <strong>Tags</strong>
       </ListGroup.Item>
