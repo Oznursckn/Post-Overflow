@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Post from "./Post";
-@Entity()
+@Entity({ name: "tag" })
 export default class Tag extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

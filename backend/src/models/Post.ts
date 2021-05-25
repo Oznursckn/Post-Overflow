@@ -13,7 +13,7 @@ import User from "./User";
 import Comment from "./Comment";
 import Tag from "./Tag";
 
-@Entity()
+@Entity({ name: "post" })
 export default class Post extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
