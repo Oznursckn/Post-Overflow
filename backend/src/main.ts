@@ -3,6 +3,8 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerDoc from "./config/swaggerConfig.json";
 
 import logger from "./middlewares/logger";
 import { connectToDatabase } from "./config/database";
@@ -19,6 +21,7 @@ async function start() {
   app.use(cookieParser());
   app.use(express.json());
   app.use("/api", controllers);
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
   console.clear();
   console.log(`${`[Server]`.green} Environment: ${process.env.NODE_ENV}`);
