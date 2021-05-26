@@ -137,6 +137,60 @@
     }
   },
   "paths": {
+
+    "/tags":{
+      "get": {
+        "description": "",
+        "tags":["Tags"],
+        "parameters": [],
+        "responses": {
+          "200" : {
+            "description": "OK"
+          }
+        }
+      }
+    },
+   "/tags/{id}" : {
+        "get": {
+          "description": "",
+          "tags": ["Tags"],
+          "parameters": [
+            {
+              "in":"path",
+              "name":"id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            }
+          }
+        }
+      },
+    "/tags/{id}/posts" : {
+      "get" : {
+        "description": "",
+        "parameters": [],
+        "tags": ["Tags"],
+        "responses": {
+          "200" : {
+            "description": "OK",
+            "content": {
+              "application/json" : {
+                "schema" : {
+                  "$ref" :"#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
     "/news":{
       "get": {
         "description": "",
