@@ -137,6 +137,19 @@
     }
   },
   "paths": {
+    "/news":{
+      "get": {
+        "description": "",
+        "tags": ["News"],
+        "parameters": [],
+        "responses": {
+          "200" : {
+            "description": "OK"
+          }
+        }
+      }
+    
+    },
     "/users": {
       "get": {
         "description": "",
