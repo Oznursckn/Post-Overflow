@@ -138,6 +138,106 @@
   },
   "paths": {
 
+    "/comments" :{
+      "post":{
+        "description": "",
+        "tags": ["Comments"],
+        "parameters": [],
+        "requestBody" :{
+          "content": {
+            "application/json" : {
+              "schema" : {
+                "$ref":"##/components/schemas/Comment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200" : {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/comments/{id}" :{
+      "delete" :{
+        "description": "",
+        "tags": ["Comments"],
+        "parameters": [
+          {
+            "in": "path",
+            "name":"id",
+            "schema" : {
+              "type":"string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200" : {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/comments/{id}/like" :{
+      "post":{
+        "description": "",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200" : {
+            "description": "OK",
+            "content": {
+              "application/json" : {
+                "schema" : {
+                  "$ref":"#components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/dislike" :{
+      "post":{
+        "description": "",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200" : {
+            "description": "OK",
+            "content": {
+              "application/json" : {
+                "schema" : {
+                  "$ref":"#components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/undislike" :{
+      "post":{
+        "description": "",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200" : {
+            "description": "OK",
+            "content": {
+              "application/json" : {
+                "schema" : {
+                  "$ref":"#components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
     "/tags":{
       "get": {
         "description": "",
@@ -190,7 +290,7 @@
         }
       }
     },
-    
+
     "/news":{
       "get": {
         "description": "",
