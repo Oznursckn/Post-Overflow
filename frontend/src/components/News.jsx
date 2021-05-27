@@ -1,13 +1,30 @@
 import { Card, ListGroup } from "react-bootstrap";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function News() {
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getNews() {
+      let response = await axios.get("/api/news");
+      setNews(response.data.filter(({ url }) => url !== null));
+      setLoading(false);
+    }
+    getNews();
+  }, []);
   return (
     <Card>
-      <Card.Header>News</Card.Header>
+      <Card.Header>Son Haberler</Card.Header>
       <ListGroup variant="flush">
-        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+        {loading
+          ? "loading"
+          : news.map(({ id, title, url }) => (
+              <a href={url} target="_blank" key={id}>
+                <ListGroup.Item>{title}</ListGroup.Item>
+              </a>
+            ))}
       </ListGroup>
     </Card>
   );
