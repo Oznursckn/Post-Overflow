@@ -8,9 +8,7 @@ module.exports = {
   mode: NODE_ENV,
   target: "node",
   externalsPresets: { node: true },
-  externals: [
-    nodeExternals(),
-  ],
+  externals: [nodeExternals()],
   resolve: {
     extensions: [".ts", ".js"],
   },
