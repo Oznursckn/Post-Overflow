@@ -7,6 +7,99 @@
   "servers": [{ "url": "/api" }],
   "components": {
     "schemas": {
+      "PaginationDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "perPage": {
+            "type": "integer"
+          },
+          "currentPage": {
+            "type": "integer"
+          },
+          "numberOfPages": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          }
+        }
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "PostDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "News": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "ReactionDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          }
+        }
+      },
+      "CommentDto": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "string"
+          }
+        }
+      },
       "UserDto": {
         "type": "object",
         "required": ["firstName", "lastName", "email", "password"],
@@ -77,6 +170,9 @@
           },
           "about": {
             "type": "string"
+          },
+          "token": {
+            "type": "string"
           }
         }
       },
@@ -137,186 +233,502 @@
     }
   },
   "paths": {
-
-    "/comments" :{
-      "post":{
-        "description": "",
-        "tags": ["Comments"],
+    "/auth/login": {
+      "post": {
+        "description": "Üye girişi yapar ve cookielere jwt token ekler",
+        "summary": "Üye Girişi",
+        "tags": ["Auth"],
         "parameters": [],
-        "requestBody" :{
-          "content": {
-            "application/json" : {
-              "schema" : {
-                "$ref":"##/components/schemas/Comment"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
               }
             }
           }
         },
-        "responses": {
-          "200" : {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/comments/{id}" :{
-      "delete" :{
-        "description": "",
-        "tags": ["Comments"],
-        "parameters": [
-          {
-            "in": "path",
-            "name":"id",
-            "schema" : {
-              "type":"string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200" : {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/comments/{id}/like" :{
-      "post":{
-        "description": "",
-        "parameters": [],
-        "tags": ["Comments"],
-        "responses": {
-          "200" : {
-            "description": "OK",
-            "content": {
-              "application/json" : {
-                "schema" : {
-                  "$ref":"#components/schemas/Comment"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/comments/{id}/dislike" :{
-      "post":{
-        "description": "",
-        "parameters": [],
-        "tags": ["Comments"],
-        "responses": {
-          "200" : {
-            "description": "OK",
-            "content": {
-              "application/json" : {
-                "schema" : {
-                  "$ref":"#components/schemas/Comment"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/comments/{id}/undislike" :{
-      "post":{
-        "description": "",
-        "parameters": [],
-        "tags": ["Comments"],
-        "responses": {
-          "200" : {
-            "description": "OK",
-            "content": {
-              "application/json" : {
-                "schema" : {
-                  "$ref":"#components/schemas/Comment"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    
-    "/tags":{
-      "get": {
-        "description": "",
-        "tags":["Tags"],
-        "parameters": [],
-        "responses": {
-          "200" : {
-            "description": "OK"
-          }
-        }
-      }
-    },
-   "/tags/{id}" : {
-        "get": {
-          "description": "",
-          "tags": ["Tags"],
-          "parameters": [
-            {
-              "in":"path",
-              "name":"id",
+        "requestBody": {
+          "content": {
+            "application/json": {
               "schema": {
-                "type": "string"
-              },
-              "required": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        }
-      },
-    "/tags/{id}/posts" : {
-      "get" : {
-        "description": "",
-        "parameters": [],
-        "tags": ["Tags"],
-        "responses": {
-          "200" : {
-            "description": "OK",
-            "content": {
-              "application/json" : {
-                "schema" : {
-                  "$ref" :"#/components/schemas/Post"
-                }
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           }
         }
       }
     },
-
-    "/news":{
-      "get": {
-        "description": "",
-        "tags": ["News"],
-        "parameters": [],
-        "responses": {
-          "200" : {
-            "description": "OK"
-          }
-        }
-      }
-    
-    },
-    "/users": {
-      "get": {
-        "description": "",
-        "tags": ["Users"],
+    "/auth/logout": {
+      "post": {
+        "description": "Üye çıkışı yapar ve cookilerden tokenı siler",
+        "summary": "Üye Çıkışı",
+        "tags": ["Auth"],
         "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
+      }
+    },
+    "/posts": {
+      "post": {
+        "description": "Paylaşım Ekle",
+        "summary": "Paylaşım yapmak için kullanılır",
+        "tags": ["Posts"],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostDto"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Tüm Paylaşımları getirir",
+        "summary": "Tüm Paylaşımları Getir",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "in": "query"
+          },
+          {
+            "name": "page",
+            "schema": {
+              "type": "number",
+              "default": 1
+            },
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "description": "Verilen id ye göre paylaşımı getirir",
+        "summary": "Paylaşım Getir",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Verilen id ye göre paylaşımı siler",
+        "summary": "Paylaşım Sil",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/posts/{id}/comments": {
+      "get": {
+        "description": "Verilen id ye göre paylaşımdaki yorumları getirir",
+        "summary": "Paylaşımdaki yorumları getir",
+        "tags": ["Posts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}/like": {
+      "post": {
+        "description": "Verilen id ye göre paylaşım beğenme",
+        "summary": "Paylaşım Beğen",
+        "parameters": [],
+        "tags": ["Posts"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}/unlike": {
+      "post": {
+        "description": "Verilen id ye göre paylaşım beğenmeyi kaldırır",
+        "summary": "Paylaşım beğenmeyi kaldır",
+        "parameters": [],
+        "tags": ["Posts"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}/save": {
+      "post": {
+        "description": "Verilen id ye göre paylaşım kaydet",
+        "summary": "Paylaşım Kaydetme",
+        "parameters": [],
+        "tags": ["Posts"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}/unsave": {
+      "post": {
+        "description": "Verilen id ye göre paylaşım kaydetmeyi kaldırır",
+        "summary": "Paylaşım kaydetmeyi kaldır",
+        "parameters": [],
+        "tags": ["Posts"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments": {
+      "post": {
+        "description": "Yorum Yap",
+        "summary": "Yorum Yap",
+        "tags": ["Comments"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/comments/{id}": {
+      "delete": {
+        "description": "Verilen id ye göre yorumu siler",
+        "summary": "Yorum Sil",
+        "tags": ["Comments"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/comments/{id}/like": {
+      "post": {
+        "description": "Verilen id ye göre yorumu beğenir",
+        "summary": "Yorum Beğen",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/dislike": {
+      "post": {
+        "description": "Verilen id ye göre yorum beğenme",
+        "summary": "Yorum Beğenme",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/undislike": {
+      "post": {
+        "description": "Verilen id ye göre yorum beğenmemeyi kaldırır",
+        "summary": "Yorum Beğenmemeyi Kaldır",
+        "parameters": [],
+        "tags": ["Comments"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/ReactionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "description": "Tüm etiketleri getir",
+        "summary": "Etiketleri Getir",
+        "tags": ["Tags"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags/{id}": {
+      "get": {
+        "description": "Verilen id ye göre etiket getirir",
+        "summary": "Etiket Getir",
+        "tags": ["Tags"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/Tag"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags/{id}/posts": {
+      "get": {
+        "description": "Verilen id ye göre etiketteki paylaşımları getir",
+        "summary": "Etiketteki paylaşımları getir",
+        "tags": ["Tags"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/news": {
+      "get": {
+        "description": "Hackernewstan son haberleri getirir",
+        "summary": "Son haberleri getir",
+        "tags": ["News"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/News"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "description": "Tüm kullanıcıları getir",
+        "summary": "Kullanıcıları Getir",
+        "tags": ["Users"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
-        "description": "",
+        "description": "Yeni Kullanıcı Oluştur",
+        "summary": "Kullanıcı Oluştur",
         "tags": ["Users"],
         "parameters": [],
         "requestBody": {
@@ -329,15 +741,16 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           }
         }
       }
     },
     "/users/{id}": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcı bilgilerini getir",
+        "summary": "Kullanıcı Getir",
         "tags": ["Users"],
         "parameters": [
           {
@@ -351,12 +764,20 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcıyı sil",
+        "summary": "Kullanıcı Sil",
         "tags": ["Users"],
         "parameters": [
           {
@@ -369,13 +790,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           }
         }
       },
       "put": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcı güncelle",
+        "summary": "Kullanıcıyı Güncelle",
         "tags": ["Users"],
         "parameters": [
           {
@@ -405,7 +827,8 @@
     },
     "/users/{id}/posts": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcının paylaşımlarını getirir",
+        "summary": "Kullanıcı Paylaşımlarını Getir",
         "parameters": [],
         "tags": ["Users"],
         "responses": {
@@ -414,7 +837,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Post"
+                  }
                 }
               }
             }
@@ -424,7 +850,8 @@
     },
     "/users/{id}/liked-posts": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcının beğendiği paylaşımları getirir",
+        "summary": "Kullanıcının Beğendiği Paylaşımları Getir",
         "parameters": [],
         "tags": ["Users"],
         "responses": {
@@ -433,7 +860,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Post"
+                  }
                 }
               }
             }
@@ -443,7 +873,8 @@
     },
     "/users/{id}/saved-posts": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcının kaydedilmiş paylaşımlarını getirir",
+        "summary": "Kullanıcının Kaydedilmiş Paylaşımlarını Getir",
         "parameters": [],
         "tags": ["Users"],
         "responses": {
@@ -452,7 +883,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Post"
+                  }
                 }
               }
             }
@@ -462,7 +896,8 @@
     },
     "/users/{id}/liked-comments": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kullanıcının beğendiği yorumları getirir",
+        "summary": "Kullanıcının Beğendiği Yorumları Getir",
         "parameters": [],
         "tags": ["Users"],
         "responses": {
@@ -471,7 +906,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Comment"
+                  }
                 }
               }
             }
@@ -481,7 +919,8 @@
     },
     "/users/{id}/disliked-comments": {
       "get": {
-        "description": "",
+        "description": "Verilen id ye göre kulalnıcının beğenmediği yorumları getirir",
+        "summary": "Kullanıcının beğenmediği yorumları getirir",
         "parameters": [],
         "tags": ["Users"],
         "responses": {
@@ -490,7 +929,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Comment"
+                  }
                 }
               }
             }
