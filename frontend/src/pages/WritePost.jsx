@@ -1,22 +1,32 @@
-import { Button,Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import React from "react";
 
 export default function WritePost() {
   return (
-    <div>
-      <Card className="text-center">
-        <Card.Header>Featured</Card.Header>
+    <form>
+      <Card>
+        <Card.Header as="h1" className="text-center">
+          <input type="text" placeholder="Başlık" className="editor-header" required />
+        </Card.Header>
         <Card.Body>
-          <Card.Title>Special title treatment</Card.Title>
-          <Card.Text>
-            With supporting text below as a natural lead-in to additional
-            content.
-          </Card.Text>
-          <Button variant="primary">Yayınla</Button>
-          <Button variant="success">Kaydet</Button>
+          <textarea
+            rows="10"
+            className="editor-input"
+            placeholder="Paylaşım İçeriği"
+            required
+          />
         </Card.Body>
-        <Card.Footer className="text-muted">2 days ago</Card.Footer>
+        <Card.Footer className="text-muted">
+          <input
+            type="text"
+            placeholder="Etiketler (teknoloji,yazilim)"
+            className="editor-input"
+          />
+        </Card.Footer>
       </Card>
-    </div>
+      <Button type="submit" variant="primary" className="mt-3">
+        Yayınla
+      </Button>
+    </form>
   );
 }
