@@ -1,9 +1,21 @@
 import { Card, Button, Modal, Form } from "react-bootstrap";
-import { Gift } from "react-feather";
-import { useState } from "react";
+import { Gift, Zap } from "react-feather";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ProfileCard() {
   const [isUpdateProfileShow, setIsUpdateProfileShow] = useState(false);
+  const { id } = useParams();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    async function getUser() {
+      const response = await axios.get(`/api/users/${id}`);
+      setUser(response.data);
+    }
+    getUser();
+  }, []);
 
   return (
     <>
