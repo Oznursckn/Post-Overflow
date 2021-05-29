@@ -65,13 +65,7 @@ class UserService {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
-    await User.update(
-      user,
-      plainToClass(User, updateUserDto, {
-        excludeExtraneousValues: true,
-        exposeUnsetFields: false,
-      })
-    );
+    await User.update(user.id, updateUserDto);
   }
 
   private async getUserWithRelations(id: string, relations: string[]) {

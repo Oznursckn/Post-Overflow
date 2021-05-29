@@ -1,7 +1,5 @@
-import { Button } from "react-bootstrap";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Layout from "./components/Layout";
 import Register from "./pages/Register";
 import Post from "./pages/Post";
 import WritePost from "./pages/WritePost";
@@ -13,7 +11,6 @@ import AuthRoute from "./AuthRoute";
 export default function App() {
   return (
     <BrowserRouter>
-      <Layout>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/post/:id" component={Post} />
@@ -22,7 +19,6 @@ export default function App() {
           <AuthRoute exact path="/login" component={Login} />
           <AuthRoute exact path="/register" component={Register} />
         </Switch>
-      </Layout>
     </BrowserRouter>
   );
 }

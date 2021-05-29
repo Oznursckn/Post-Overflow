@@ -9,11 +9,14 @@ import {
 import { Search } from "react-feather";
 import { Link } from "react-router-dom";
 import authService from "../services/authService";
-import { useState, useEffect, useContext } from "react";
-import { AuthenticationContext } from "../context/AuthenticationContext";
+import { useState, useEffect } from "react";
 
 export default function Layout({ children }) {
-  const authenticatedUser = useContext(AuthenticationContext);
+  const [authenticatedUser, setAuthenticatedUser] = useState();
+
+  useEffect(() => {
+    setAuthenticatedUser(authService.getAuthenticatedUser());
+  }, []);
 
   return (
     <div className="layout">

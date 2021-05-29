@@ -1,9 +1,9 @@
-
 import Post from "../components/Post";
 import News from "../components/News";
 import { Row, Col } from "react-bootstrap";
 import Tag from "../components/Tags";
 import { useEffect, useState } from "react";
+import Layout from "../components/Layout";
 import axios from "axios";
 
 export default function Home() {
@@ -20,20 +20,20 @@ export default function Home() {
   }, []);
 
   return (
-  
+    <Layout>
       <Row>
         <Col>
           <Tag />
         </Col>
         <Col xs={6}>
           {posts.map((post) => (
-            <Post data={post}/>
+            <Post data={post} />
           ))}
         </Col>
         <Col>
           <News />
         </Col>
       </Row>
-    
+    </Layout>
   );
 }
