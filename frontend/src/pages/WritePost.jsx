@@ -3,29 +3,30 @@ import React from "react";
 
 export default function WritePost() {
   return (
-    <div>
+    <form>
       <Card>
-        <h1>
-          <Card.Header className="text-center">Featured</Card.Header>
-        </h1>
+        <Card.Header as="h1" className="text-center">
+          <input type="text" placeholder="Başlık" className="editor-header" required />
+        </Card.Header>
         <Card.Body>
-          <h6>
-            <Card.Text>
-              With supporting text below as a natural lead-in to additional
-              content.
-              With supporting text below as a natural lead-in to additional
-              content. With supporting text below as a natural lead-in to additional
-              content. With supporting text below as a natural lead-in to additional
-            </Card.Text>
-          </h6>
+          <textarea
+            rows="10"
+            className="editor-input"
+            placeholder="Paylaşım İçeriği"
+            required
+          />
         </Card.Body>
-        <Card.Footer className="text-muted text-center">
-          <Button variant="primary">Yayınla</Button>
-          <Button className="ml-3" variant="success">
-            Kaydet
-          </Button>
+        <Card.Footer className="text-muted">
+          <input
+            type="text"
+            placeholder="Etiketler (teknoloji,yazilim)"
+            className="editor-input"
+          />
         </Card.Footer>
       </Card>
-    </div>
+      <Button type="submit" variant="primary" className="mt-3">
+        Yayınla
+      </Button>
+    </form>
   );
 }

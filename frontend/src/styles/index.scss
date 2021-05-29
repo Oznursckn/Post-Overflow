@@ -47,3 +47,22 @@ body,
     border-left: none !important;
   }
 }
+
+.editor-header {
+  border: none;
+  text-align: center;
+  width: 100%;
+  background: transparent;
+  &:focus {
+    outline: none;
+  }
+}
+
+.editor-input {
+  border: none;
+  width: 100%;
+  background: transparent;
+  &:focus {
+    outline: none;
+  }
+}
