@@ -26,6 +26,11 @@ export default function ProfileCard() {
     const response = await axios.get(`/api/users/${id}`);
     setUser(response.data);
     setIsLoading(false);
+    const { firstName, lastName, email, about } = response.data;
+    setFirstName(firstName);
+    setLastName(lastName);
+    setEmail(email);
+    setAbout(about);
   }
 
   async function handleUpdateUser(e) {

@@ -1,17 +1,45 @@
 import { Button, Card } from "react-bootstrap";
-import React from "react";
+import { useState, useEffect} from "react";
 import Layout from "../components/Layout";
+import axios from "axios";
+import authService from "../services/authService";
 
 export default function WritePost() {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [tags, setTags] = useState("");
+  const [userId, setUserId] = useState();
+
+  async function handleCreatePost(e) {
+    e.preventDefault();
+
+    try {
+      await axios.post("/api/posts", {
+        title,
+        body,
+        userId,
+        tags: tags.split(","),
+      });
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  }
+
+  useEffect(() => {
+    setUserId(authService.getAuthenticatedUser().id);
+  }, []);
+
   return (
     <Layout>
-      <form>
+      <form onSubmit={handleCreatePost}>
         <Card>
           <Card.Header as="h1" className="text-center">
             <input
               type="text"
               placeholder="Başlık"
               className="editor-header"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
             />
           </Card.Header>
@@ -20,6 +48,8 @@ export default function WritePost() {
               rows="10"
               className="editor-input"
               placeholder="Paylaşım İçeriği"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
               required
             />
           </Card.Body>
@@ -27,6 +57,8 @@ export default function WritePost() {
             <input
               type="text"
               placeholder="Etiketler (teknoloji,yazilim)"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
               className="editor-input"
             />
           </Card.Footer>
