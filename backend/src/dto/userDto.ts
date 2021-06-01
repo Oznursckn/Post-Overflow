@@ -36,7 +36,6 @@ export class UpdateUserDto {
   lastName: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   about: string;
 

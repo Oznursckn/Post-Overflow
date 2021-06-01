@@ -3,6 +3,7 @@ import Comments from "../components/post/Comments";
 import { Row, Col, Card } from "react-bootstrap";
 import { Archive, Heart } from "react-feather";
 import { useEffect, useState } from "react";
+import Layout from "../components/Layout";
 import axios from "axios";
 
 export default function Post() {
@@ -24,7 +25,7 @@ export default function Post() {
     return null;
   }
   return (
-    <div>
+    <Layout>
       <Row>
         <Col className="postpage-left" md={1}>
           <Row>
@@ -62,6 +63,6 @@ export default function Post() {
           </div>
         </Col>
       </Row>
-    </div>
+    </Layout>
   );
 }

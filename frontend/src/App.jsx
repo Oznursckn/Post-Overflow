@@ -1,26 +1,24 @@
-import { Button } from "react-bootstrap";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Layout from "./components/Layout";
 import Register from "./pages/Register";
 import Post from "./pages/Post";
 import WritePost from "./pages/WritePost";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Profile from "./pages/Profile";
+import PrivateRoute from "./PrivateRoute";
+import AuthRoute from "./AuthRoute";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Layout>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/post/:id" component={Post} />
-          <Route exact path="/profile/:id" component={Profile} />
-          <Route exact path="/writepost" component={WritePost} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <PrivateRoute exact path="/profile/:id" component={Profile} />
+          <PrivateRoute exact path="/writepost" component={WritePost} />
+          <AuthRoute exact path="/login" component={Login} />
+          <AuthRoute exact path="/register" component={Register} />
         </Switch>
-      </Layout>
     </BrowserRouter>
   );
 }
