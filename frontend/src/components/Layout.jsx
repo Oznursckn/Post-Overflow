@@ -7,16 +7,22 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { Search } from "react-feather";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import authService from "../services/authService";
 import { useState, useEffect } from "react";
 
 export default function Layout({ children }) {
   const [authenticatedUser, setAuthenticatedUser] = useState();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setAuthenticatedUser(authService.getAuthenticatedUser());
   }, []);
+
+  function handleSearch(e) {
+    e.preventDefault();
+    window.location.href = `/search/${search}`;
+  }
 
   return (
     <div className="layout">
@@ -26,9 +32,13 @@ export default function Layout({ children }) {
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Form inline className="search-input">
+          <Form inline className="search-input" onSubmit={handleSearch}>
             <InputGroup>
-              <FormControl placeholder="Ara" />
+              <FormControl
+                placeholder="Ara"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
               <InputGroup.Append>
                 <InputGroup.Text>
                   <Search />

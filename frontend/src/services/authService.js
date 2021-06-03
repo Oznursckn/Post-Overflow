@@ -13,10 +13,10 @@ class AuthService {
     this.cookies.set("authenticatedUser", btoa(JSON.stringify(response.data)));
   }
 
-  getAuthenticatedUser(){
+  getAuthenticatedUser() {
     const authUserCookie = this.cookies.get("authenticatedUser");
 
-    if(authUserCookie){
+    if (authUserCookie) {
       //btoa base64 çevirir, atob stringe çevirir
       return JSON.parse(atob(authUserCookie));
     }

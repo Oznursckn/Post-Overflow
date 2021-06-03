@@ -1,25 +1,52 @@
 import React from "react";
 import Comments from "../components/post/Comments";
-import { Row, Col, Card } from "react-bootstrap";
-import { Archive, Heart } from "react-feather";
+import { Row, Col, Card, Badge, Button, Form } from "react-bootstrap";
+import { Bookmark, Calendar, Heart } from "react-feather";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+import authService from "../services/authService";
 
 export default function Post() {
   const [postDetail, setPostDetail] = useState();
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [authUser, setAuthUser] = useState();
+  const [commentBody, setCommentBody] = useState("");
+  const { id } = useParams();
+
+  async function getPost() {
+    let response = await axios.get(`/api/posts/${id}`);
+    setPostDetail(response.data);
+    setLoading(false);
+  }
+  async function getComments() {
+    let response = await axios.get(`/api/posts/${id}/comments`);
+    setComments(response.data);
+    setCommentsLoading(false);
+  }
 
   useEffect(() => {
-    async function getPost() {
-      let response = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts/1"
-      );
-      setPostDetail(response.data);
-      setLoading(false);
-    }
     getPost();
+    getComments();
+    setAuthUser(authService.getAuthenticatedUser());
   }, []);
+
+  async function handleSaveComment(e) {
+    e.preventDefault();
+
+    await axios.post("/api/comments", {
+      body: commentBody,
+      postId: id,
+      userId: authUser.id,
+    });
+
+    setCommentBody("");
+
+    getComments();
+  }
 
   if (loading) {
     return null;
@@ -29,36 +56,82 @@ export default function Post() {
       <Row>
         <Col className="postpage-left" md={1}>
           <Row>
-            <Heart></Heart>
+            <button className="like-button d-flex">
+              <Heart />
+              <span className="ml-2">{postDetail.likes}</span>
+            </button>
           </Row>
           <br />
           <Row>
-            <Archive></Archive>
+            <button className="like-button">
+              <Bookmark />
+            </button>
           </Row>
         </Col>
         <Col md={8}>
-          <Card className="mb-3">
-            <Card.Img variant="top" src="holder.js/100px180" />
+          <Card className="mb-3 post-detail">
             <Card.Body>
-              <Card.Title>{postDetail.title}</Card.Title>
+              <Card.Title className="font-weight-bold">
+                {postDetail.title}
+              </Card.Title>
+              <div className="d-flex" style={{ gap: 5 }}>
+                {postDetail.tags.map((tag) => (
+                  <Link to={`/tag/${tag.id}`}>
+                    <Badge key={tag.id} variant="primary">
+                      {tag.name}
+                    </Badge>
+                  </Link>
+                ))}
+              </div>
+              <div className="text-muted my-3 d-flex align-items-center">
+                <Calendar />
+                <span className="ml-2">
+                  {new Date(postDetail.dateCreated).toLocaleDateString()}
+                </span>
+              </div>
               <Card.Text>{postDetail.body}</Card.Text>
-              <hr/>
-              <h4 className="font-font-weight-bolder">Comments</h4>
-             <Comments/>
+              <hr />
+              {authUser ? (
+                <Form className="mb-3" onSubmit={handleSaveComment}>
+                  <Form.Group>
+                    <Form.Label>Yorum Yap</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      value={commentBody}
+                      onChange={(e) => setCommentBody(e.target.value)}
+                      required
+                    />
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
+                    Gönder
+                  </Button>
+                </Form>
+              ) : null}
+              <h4 className="font-font-weight-bolder">Yorumlar</h4>
+              {commentsLoading ? (
+                <p className="text-muted text-center">Yükleniyor</p>
+              ) : comments.length > 0 ? (
+                <Comments data={comments} getComments={getComments} />
+              ) : (
+                <p className="text-muted text-center">Yorum Yok</p>
+              )}
             </Card.Body>
-            
           </Card>
         </Col>
         <Col md={3} className="postpage-right">
           <div class="card">
-            <div class="card-header text-center">Featured</div>
+            <div class="card-header text-center">Yazar</div>
             <div class="card-body">
-              <h5 class="card-title">About</h5>
+              <h5 class="card-title">
+                {postDetail.user.firstName} {postDetail.user.lastName}
+              </h5>
               <p class="card-text">
-                With supporting text below as a natural lead-in to additional
-                content.
+                {postDetail.user.about || "Hakkında Bulunmamaktadır"}
               </p>
-              <h5>Joined</h5>
+              <Link to={`/profile/${postDetail.user.id}`}>
+                <Button className="w-100">Profile Git</Button>
+              </Link>
             </div>
           </div>
         </Col>

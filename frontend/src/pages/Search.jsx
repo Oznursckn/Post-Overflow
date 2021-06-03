@@ -5,17 +5,20 @@ import Tag from "../components/Tags";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default function Home() {
+export default function Search() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(0);
+  const { search } = useParams();
 
   useEffect(() => {
     async function getPosts() {
       let response = await axios.get("/api/posts", {
         params: {
           page,
+          search,
         },
       });
       setNumberOfPages(response.data.numberOfPages);
