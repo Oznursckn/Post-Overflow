@@ -1,14 +1,16 @@
 import { Card, Button, Modal, Form, InputGroup } from "react-bootstrap";
-import { Gift, Zap } from "react-feather";
+import { Gift } from "react-feather";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import authService from "../../services/authService";
 
 export default function ProfileCard() {
   const [isUpdateProfileShow, setIsUpdateProfileShow] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const [user, setUser] = useState();
+  const [authUser, setAuthUser] = useState();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,7 +22,8 @@ export default function ProfileCard() {
 
   useEffect(() => {
     getUser();
-  }, []);
+    setAuthUser(authService.getAuthenticatedUser());
+  }, [id]);
 
   async function getUser() {
     const response = await axios.get(`/api/users/${id}`);
@@ -71,13 +74,15 @@ export default function ProfileCard() {
             </span>
           </div>
         </Card.Body>
-        <Button
-          className="position-absolute"
-          style={{ right: "10px", top: "10px" }}
-          onClick={() => setIsUpdateProfileShow(true)}
-        >
-          Profili Güncelle
-        </Button>
+        {authUser && authUser.id === id ? (
+          <Button
+            className="position-absolute"
+            style={{ right: "10px", top: "10px" }}
+            onClick={() => setIsUpdateProfileShow(true)}
+          >
+            Profili Güncelle
+          </Button>
+        ) : null}
       </Card>
 
       <Modal show={isUpdateProfileShow} backdrop="static" keyboard={false}>

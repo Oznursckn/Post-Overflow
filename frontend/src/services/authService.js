@@ -13,6 +13,12 @@ class AuthService {
     this.cookies.set("authenticatedUser", btoa(JSON.stringify(response.data)));
   }
 
+  async logout() {
+    await axios.post("/api/auth/logout");
+
+    this.cookies.remove("authenticatedUser");
+  }
+
   getAuthenticatedUser() {
     const authUserCookie = this.cookies.get("authenticatedUser");
 

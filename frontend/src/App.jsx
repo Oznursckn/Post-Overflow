@@ -16,7 +16,7 @@ export default function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/search/:search" component={Search} />
         <Route exact path="/post/:slug/:id" component={Post} />
-        <PrivateRoute exact path="/profile/:id" component={Profile} />
+        <Route exact path="/profile/:id" component={Profile} />
         <PrivateRoute exact path="/writepost" component={WritePost} />
         <AuthRoute exact path="/login" component={Login} />
         <AuthRoute exact path="/register" component={Register} />

@@ -7,7 +7,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { Search } from "react-feather";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import authService from "../services/authService";
 import { useState, useEffect } from "react";
 
@@ -22,6 +22,11 @@ export default function Layout({ children }) {
   function handleSearch(e) {
     e.preventDefault();
     window.location.href = `/search/${search}`;
+  }
+
+  async function handleLogout() {
+    await authService.logout();
+    window.location.href = "/";
   }
 
   return (
@@ -56,6 +61,9 @@ export default function Layout({ children }) {
               <Link to="/writepost">
                 <Button>Paylaşım Yap</Button>
               </Link>
+              <Button variant="danger" className="ml-3" onClick={handleLogout}>
+                Çıkış Yap
+              </Button>
             </div>
           ) : (
             <div className="ml-auto">
