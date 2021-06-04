@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node .",
-    "build": "webpack",
+    "start": "cross-env NODE_ENV=production node .",
+    "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon src/main.ts"
   },
   "dependencies": {
@@ -42,11 +42,7 @@
     "@types/swagger-ui-express": "^4.1.2",
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.7",
-    "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.0",
-    "webpack-node-externals": "^3.0.0"
+    "typescript": "^4.3.2"
   }
 }

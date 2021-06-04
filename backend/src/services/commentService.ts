@@ -36,7 +36,11 @@ class CommentService {
 
   async getByPostId(postId: string) {
     const post = await postService.getById(postId);
-    return await Comment.find({ relations: ["user"], where: { post } });
+    return await Comment.find({
+      relations: ["user"],
+      where: { post },
+      order: { dateCreated: "DESC" },
+    });
   }
 
   async getLikedCommentsByUserId(id: string) {

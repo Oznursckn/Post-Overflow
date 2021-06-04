@@ -20,6 +20,7 @@ class PostService {
         "post.likes",
         "post.slug",
         "post.title",
+        "post.body",
         "post.dateCreated",
         "user.id",
         "user.firstName",
