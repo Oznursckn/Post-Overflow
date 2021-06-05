@@ -31,7 +31,7 @@ class CommentService {
 
   async delete(id: string) {
     const comment = await this.getById(id);
-    await Comment.delete(comment);
+    await Comment.delete(comment.id);
   }
 
   async getByPostId(postId: string) {

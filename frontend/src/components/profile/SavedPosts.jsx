@@ -20,7 +20,7 @@ export default function SavedPosts({ id }) {
   return (
     <div>
       {posts.map((post) => (
-        <Post key={post.id} data={post} />
+        <Post key={post.id} data={post} getPosts={getUserPosts} />
       ))}
       {posts.length === 0 ? (
         <p className="text-muted text-center">

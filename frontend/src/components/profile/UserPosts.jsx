@@ -20,6 +20,7 @@ export default function UserPosts({ id }) {
     if (reset) {
       setPosts(pagination.data);
     } else {
+      console.log("Deneme");
       setPosts([...posts, ...pagination.data]);
     }
     setNumberOfPages(pagination.numberOfPages);
@@ -41,7 +42,7 @@ export default function UserPosts({ id }) {
   return (
     <div>
       {posts.map((post) => (
-        <Post key={post.id} data={post} />
+        <Post key={post.id} data={post} getPosts={getUserPosts} />
       ))}
       {page >= numberOfPages ? null : (
         <Button onClick={() => setPage(page + 1)}>Daha Fazla Göster</Button>

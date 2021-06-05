@@ -27,8 +27,7 @@ router.post(
   postAuth,
   async (req, res, next) => {
     try {
-      await postService.save(req.body);
-      res.status(StatusCodes.CREATED).send();
+      res.status(StatusCodes.CREATED).send(await postService.save(req.body));
     } catch (error) {
       next(error);
     }

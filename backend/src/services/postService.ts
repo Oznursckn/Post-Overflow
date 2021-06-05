@@ -34,7 +34,7 @@ class PostService {
       .orderBy("post.dateCreated", "DESC");
   }
 
-  async save(postDto: PostDto) {
+  async save(postDto: PostDto): Promise<Post> {
     const { body, tags, title, userId } = postDto;
     await userService.getById(userId);
 
@@ -51,7 +51,7 @@ class PostService {
       }
     }
 
-    await Post.create({
+    return await Post.create({
       title,
       body,
       slug: slugify(title, { lower: true }),
@@ -123,7 +123,9 @@ class PostService {
   }
 
   async getSavedPostsByUserId(id: string) {
-    return (await userService.getUserWithSavedPosts(id)).savedPosts;
+    return await (
+      await userService.getUserWithSavedPosts(id)
+    ).savedPosts;
   }
 
   async like(postId: string, userId: string) {
@@ -173,8 +175,6 @@ class PostService {
     if (!isSaved) {
       user.savedPosts.push(post);
       await user.save();
-
-      post.likes = post.likes + 1;
       await post.save();
     }
   }
@@ -192,8 +192,6 @@ class PostService {
         (savedPost) => savedPost.id !== post.id
       );
       await user.save();
-
-      post.likes = post.likes - 1;
       await post.save();
     }
   }

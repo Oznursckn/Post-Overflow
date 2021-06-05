@@ -11,16 +11,28 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
-  useEffect(() => {
-    async function getPosts() {
+  async function getPosts(reset) {
+    if (reset) {
       let response = await axios.get("/api/posts", {
         params: {
-          page,
+          page: 1,
         },
       });
+      setPage(1);
       setNumberOfPages(response.data.numberOfPages);
-      setPosts([...posts, ...response.data.data]);
+      setPosts(response.data.data);
+      return;
     }
+    let response = await axios.get("/api/posts", {
+      params: {
+        page,
+      },
+    });
+    setNumberOfPages(response.data.numberOfPages);
+    setPosts([...posts, ...response.data.data]);
+  }
+
+  useEffect(() => {
     getPosts();
   }, [page]);
 
@@ -32,7 +44,7 @@ export default function Home() {
         </Col>
         <Col xs={6} className="d-flex flex-column">
           {posts.map((post) => (
-            <Post data={post} />
+            <Post key={post.id} data={post} getPosts={getPosts} />
           ))}
           {page >= numberOfPages ? null : (
             <Button onClick={() => setPage(page + 1)}>Daha fazla göster</Button>

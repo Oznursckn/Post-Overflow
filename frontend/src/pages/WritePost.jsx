@@ -1,8 +1,9 @@
 import { Button, Card } from "react-bootstrap";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
 import authService from "../services/authService";
+import { useHistory } from "react-router-dom";
 
 export default function WritePost() {
   const [title, setTitle] = useState("");
@@ -10,16 +11,22 @@ export default function WritePost() {
   const [tags, setTags] = useState("");
   const [userId, setUserId] = useState();
 
+  const history = useHistory();
+
   async function handleCreatePost(e) {
     e.preventDefault();
 
     try {
-      await axios.post("/api/posts", {
-        title,
-        body,
-        userId,
-        tags: tags.split(","),
-      });
+      const { id, slug } = (
+        await axios.post("/api/posts", {
+          title,
+          body,
+          userId,
+          tags: tags.split(","),
+        })
+      ).data;
+
+      history.push(`/post/${slug}/${id}`);
     } catch (error) {
       alert(error.response.data.message);
     }
