@@ -36,6 +36,7 @@ router.get("/:id", async (req, res, next) => {
 router.delete("/:id", jwtAuthMiddleware, userAuth, async (req, res, next) => {
   try {
     await userService.delete(req.params.id);
+    res.clearCookie("token");
     res.status(StatusCodes.NO_CONTENT).send();
   } catch (error) {
     next(error);

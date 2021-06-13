@@ -19,6 +19,10 @@ class AuthService {
     this.cookies.remove("authenticatedUser");
   }
 
+  deleteUser() {
+    this.cookies.remove("authenticatedUser");
+  }
+
   getAuthenticatedUser() {
     const authUserCookie = this.cookies.get("authenticatedUser");
 

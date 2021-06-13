@@ -74,7 +74,7 @@ export default function Post({ data, getPosts }) {
       <Card.Body>
         <Card.Title className="font-weight-bold d-flex">
           <Link to={`/post/${slug}/${id}`}>{title}</Link>
-          {authUser && user.id === authUser.id ? (
+          {authUser && user && user.id === authUser.id ? (
             <span className="ml-auto">
               <button className="like-button text-danger" onClick={deletePost}>
                 <Trash />
@@ -87,9 +87,13 @@ export default function Post({ data, getPosts }) {
           {body.length > 300 ? `${body.substring(0, 301)}...` : body}
         </Card.Text>
         <div className="d-flex">
-          <Link to={`/profile/${user.id}`}>
-            <span className="text-muted">{`Yazar: ${user.firstName} ${user.lastName}`}</span>
-          </Link>
+          {user ? (
+            <Link to={`/profile/${user.id}`}>
+              <span className="text-muted">{`Yazar: ${user.firstName} ${user.lastName}`}</span>
+            </Link>
+          ) : (
+            <span className="text-muted">Yazar: [Silinmiş]</span>
+          )}
           <span className="ml-auto text-muted d-flex align-items-center">
             <Calendar />
             <span className="ml-2">

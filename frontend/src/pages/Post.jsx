@@ -173,22 +173,24 @@ export default function Post() {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3} className="postpage-right">
-          <div class="card">
-            <div class="card-header text-center">Yazar</div>
-            <div class="card-body">
-              <h5 class="card-title">
-                {postDetail.user.firstName} {postDetail.user.lastName}
-              </h5>
-              <p class="card-text">
-                {postDetail.user.about || "Hakkında Bulunmamaktadır"}
-              </p>
-              <Link to={`/profile/${postDetail.user.id}`}>
-                <Button className="w-100">Profile Git</Button>
-              </Link>
+        {postDetail.user ? (
+          <Col md={3} className="postpage-right">
+            <div class="card">
+              <div class="card-header text-center">Yazar</div>
+              <div class="card-body">
+                <h5 class="card-title">
+                  {postDetail.user.firstName} {postDetail.user.lastName}
+                </h5>
+                <p class="card-text">
+                  {postDetail.user.about || "Hakkında Bulunmamaktadır"}
+                </p>
+                <Link to={`/profile/${postDetail.user.id}`}>
+                  <Button className="w-100">Profile Git</Button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </Col>
+          </Col>
+        ) : null}
       </Row>
     </Layout>
   );

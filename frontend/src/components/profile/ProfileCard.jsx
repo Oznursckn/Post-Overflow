@@ -2,15 +2,18 @@ import { Card, Button, Modal, Form, InputGroup } from "react-bootstrap";
 import { Gift } from "react-feather";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import axios from "axios";
 import authService from "../../services/authService";
 
 export default function ProfileCard() {
+  const history = useHistory();
   const [isUpdateProfileShow, setIsUpdateProfileShow] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const [user, setUser] = useState();
   const [authUser, setAuthUser] = useState();
+  const [isDeleteAccountShow, setIsDeleteAccountShow] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -55,6 +58,12 @@ export default function ProfileCard() {
     }
   }
 
+  async function handleDeleteUser() {
+    await axios.delete(`/api/users/${user.id}`);
+    await authService.deleteUser();
+    history.push("/");
+  }
+
   if (isLoading) return null;
 
   return (
@@ -85,7 +94,12 @@ export default function ProfileCard() {
         ) : null}
       </Card>
 
-      <Modal show={isUpdateProfileShow} backdrop="static" keyboard={false}>
+      <Modal
+        show={isUpdateProfileShow}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
         <Modal.Header>
           <Modal.Title>Profili Güncelle</Modal.Title>
         </Modal.Header>
@@ -159,6 +173,13 @@ export default function ProfileCard() {
           <Modal.Footer>
             <Button
               variant="danger"
+              className="mr-auto"
+              onClick={() => setIsDeleteAccountShow(true)}
+            >
+              Hesabımı Sil
+            </Button>
+            <Button
+              variant="danger"
               onClick={() => setIsUpdateProfileShow(false)}
             >
               İptal
@@ -168,6 +189,31 @@ export default function ProfileCard() {
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      <Modal
+        show={isDeleteAccountShow}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <Modal.Header>
+          <h3>Hesabını silmek istediğine emin misin?</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Bu işlem geri alınamaz ve hesabınız sonsuza kadar silinir.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => setIsDeleteAccountShow(false)}
+          >
+            İptal
+          </Button>
+          <Button variant="danger" type="submit" onClick={handleDeleteUser}>
+            Sil
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

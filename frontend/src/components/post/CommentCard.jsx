@@ -91,10 +91,14 @@ export default function CommentCard({ comment, getComments, authUser }) {
     <Card className="mb-3">
       <Card.Body>
         <Card.Title className="d-flex">
-          <span>
-            {user.firstName} {user.lastName}
-          </span>
-          {authUser && authUser.id === user.id ? (
+          {user ? (
+            <span>
+              {user.firstName} {user.lastName}
+            </span>
+          ) : (
+            <span>[Silinmiş]</span>
+          )}
+          {authUser && user && authUser.id === user.id ? (
             <span className="ml-auto">
               <button
                 className="like-button text-danger"
