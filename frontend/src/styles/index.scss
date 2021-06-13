@@ -66,3 +66,12 @@ body,
     outline: none;
   }
 }
+
+.like-button {
+  border: none;
+  background-color: transparent;
+}
+
+.selected-tab {
+  color: $primary;
+}

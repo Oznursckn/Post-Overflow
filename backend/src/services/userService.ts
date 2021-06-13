@@ -68,8 +68,13 @@ class UserService {
     await User.update(user.id, updateUserDto);
   }
 
-  private async getUserWithRelations(id: string, relations: string[]) {
-    const user = await User.findOne(id, { relations });
+  async getUserWithLikedPosts(id: string) {
+    const user = await User.createQueryBuilder("user")
+      .leftJoinAndSelect("user.likedPosts", "likedPost")
+      .leftJoinAndSelect("likedPost.user", "postUser")
+      .where("user.id = :id", { id })
+      .getOne();
+
     if (!user) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
@@ -79,19 +84,38 @@ class UserService {
     return user;
   }
 
-  async getUserWithLikedPosts(id: string) {
-    return await this.getUserWithRelations(id, ["likedPosts"]);
-  }
-
   async getUserWithSavedPosts(id: string) {
-    return await this.getUserWithRelations(id, ["savedPosts"]);
+    const user = await User.createQueryBuilder("user")
+      .leftJoinAndSelect("user.savedPosts", "savedPost")
+      .leftJoinAndSelect("savedPost.user", "postUser")
+      .where("user.id = :id", { id })
+      .getOne();
+
+    if (!user) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Could not find the user for ID: ${id} `
+      );
+    }
+    return user;
   }
 
   async getUserWithLikedAndDislikedComments(id: string) {
-    return await this.getUserWithRelations(id, [
-      "likedComments",
-      "dislikedComments",
-    ]);
+    const user = await User.createQueryBuilder("user")
+      .leftJoinAndSelect("user.likedComments", "likedComment")
+      .leftJoinAndSelect("user.dislikedComments", "dislikedComment")
+      .leftJoinAndSelect("likedComment.user", "commentUser")
+      .leftJoinAndSelect("dislikedComment.user", "dislikedCommentUser")
+      .where("user.id = :id", { id })
+      .getOne();
+
+    if (!user) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Could not find the user for ID: ${id} `
+      );
+    }
+    return user;
   }
 
   async saveToken(token: string, user: User) {

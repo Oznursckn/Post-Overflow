@@ -1,21 +1,24 @@
-import React from "react";
-import { Card } from "react-bootstrap";
-import { ThumbsDown, ThumbsUp } from "react-feather";
+import { useState, useEffect } from "react";
+import authService from "../../services/authService";
+import CommentCard from "./CommentCard";
 
-export default function Comments() {
+export default function Comments({ data, getComments }) {
+  const [authUser, setAuthUser] = useState();
+
+  useEffect(() => {
+    setAuthUser(authService.getAuthenticatedUser());
+  }, []);
+
   return (
     <div>
-      <Card className="mb-3">
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title></Card.Title>
-          <Card.Text></Card.Text>
-        </Card.Body>
-        <Card.Footer>
-          <ThumbsUp  />
-          <ThumbsDown className="float-right" />
-        </Card.Footer>
-      </Card>
+      {data.map((comment) => (
+        <CommentCard
+          key={comment.id}
+          getComments={getComments}
+          comment={comment}
+          authUser={authUser}
+        />
+      ))}
     </div>
   );
 }

@@ -5,34 +5,25 @@ import Tag from "../components/Tags";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export default function Home() {
+export default function Search() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(0);
-
-  async function getPosts(reset) {
-    if (reset) {
-      let response = await axios.get("/api/posts", {
-        params: {
-          page: 1,
-        },
-      });
-      setPage(1);
-      setNumberOfPages(response.data.numberOfPages);
-      setPosts(response.data.data);
-      return;
-    }
-    let response = await axios.get("/api/posts", {
-      params: {
-        page,
-      },
-    });
-    setNumberOfPages(response.data.numberOfPages);
-    setPosts([...posts, ...response.data.data]);
-  }
+  const { search } = useParams();
 
   useEffect(() => {
+    async function getPosts() {
+      let response = await axios.get("/api/posts", {
+        params: {
+          page,
+          search,
+        },
+      });
+      setNumberOfPages(response.data.numberOfPages);
+      setPosts([...posts, ...response.data.data]);
+    }
     getPosts();
   }, [page]);
 
@@ -44,7 +35,7 @@ export default function Home() {
         </Col>
         <Col xs={6} className="d-flex flex-column">
           {posts.map((post) => (
-            <Post key={post.id} data={post} getPosts={getPosts} />
+            <Post data={post} />
           ))}
           {page >= numberOfPages ? null : (
             <Button onClick={() => setPage(page + 1)}>Daha fazla göster</Button>

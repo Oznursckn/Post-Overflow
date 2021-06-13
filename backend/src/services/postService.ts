@@ -4,6 +4,7 @@ import { PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
 import Tag from "../models/Tag";
+import User from "../models/User";
 import tagService from "./tagService";
 import slugify from "slugify";
 import PaginationDto from "../dto/paginationDto";
@@ -20,6 +21,7 @@ class PostService {
         "post.likes",
         "post.slug",
         "post.title",
+        "post.body",
         "post.dateCreated",
         "user.id",
         "user.firstName",
@@ -33,7 +35,7 @@ class PostService {
       .orderBy("post.dateCreated", "DESC");
   }
 
-  async save(postDto: PostDto) {
+  async save(postDto: PostDto): Promise<Post> {
     const { body, tags, title, userId } = postDto;
     await userService.getById(userId);
 
@@ -50,7 +52,7 @@ class PostService {
       }
     }
 
-    await Post.create({
+    return await Post.create({
       title,
       body,
       slug: slugify(title, { lower: true }),
@@ -122,7 +124,9 @@ class PostService {
   }
 
   async getSavedPostsByUserId(id: string) {
-    return (await userService.getUserWithSavedPosts(id)).savedPosts;
+    return await (
+      await userService.getUserWithSavedPosts(id)
+    ).savedPosts;
   }
 
   async like(postId: string, userId: string) {
@@ -172,8 +176,6 @@ class PostService {
     if (!isSaved) {
       user.savedPosts.push(post);
       await user.save();
-
-      post.likes = post.likes + 1;
       await post.save();
     }
   }
@@ -191,9 +193,33 @@ class PostService {
         (savedPost) => savedPost.id !== post.id
       );
       await user.save();
-
-      post.likes = post.likes - 1;
       await post.save();
+    }
+  }
+
+  async isSaved(userId: string, postId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.savedPosts", "savedPost")
+        .where("user.id = :userId", { userId })
+        .andWhere("savedPost.id = :postId", { postId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async isLiked(userId: string, postId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.likedPosts", "likedPost")
+        .where("user.id = :userId", { userId })
+        .andWhere("likedPost.id = :postId", { postId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }

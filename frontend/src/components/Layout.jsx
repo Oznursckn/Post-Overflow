@@ -13,10 +13,21 @@ import { useState, useEffect } from "react";
 
 export default function Layout({ children }) {
   const [authenticatedUser, setAuthenticatedUser] = useState();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     setAuthenticatedUser(authService.getAuthenticatedUser());
   }, []);
+
+  function handleSearch(e) {
+    e.preventDefault();
+    window.location.href = `/search/${search}`;
+  }
+
+  async function handleLogout() {
+    await authService.logout();
+    window.location.href = "/";
+  }
 
   return (
     <div className="layout">
@@ -26,9 +37,13 @@ export default function Layout({ children }) {
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Form inline className="search-input">
+          <Form inline className="search-input" onSubmit={handleSearch}>
             <InputGroup>
-              <FormControl placeholder="Ara" />
+              <FormControl
+                placeholder="Ara"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
               <InputGroup.Append>
                 <InputGroup.Text>
                   <Search />
@@ -46,6 +61,9 @@ export default function Layout({ children }) {
               <Link to="/writepost">
                 <Button>Paylaşım Yap</Button>
               </Link>
+              <Button variant="danger" className="ml-3" onClick={handleLogout}>
+                Çıkış Yap
+              </Button>
             </div>
           ) : (
             <div className="ml-auto">
