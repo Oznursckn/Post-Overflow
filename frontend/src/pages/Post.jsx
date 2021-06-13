@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import authService from "../services/authService";
+import { useHistory } from "react-router";
 
 export default function Post() {
   const [postDetail, setPostDetail] = useState();
@@ -15,6 +16,9 @@ export default function Post() {
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [authUser, setAuthUser] = useState();
   const [commentBody, setCommentBody] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const history = useHistory();
   const { id } = useParams();
 
   async function getPost() {
@@ -33,6 +37,53 @@ export default function Post() {
     getComments();
     setAuthUser(authService.getAuthenticatedUser());
   }, []);
+
+  useEffect(() => {
+    if (authUser) {
+      getIsLiked();
+      getIsSaved();
+    }
+  }, [authUser]);
+
+  async function getIsSaved() {
+    setIsSaved(
+      (
+        await axios.post(`/api/posts/${id}/is-saved`, {
+          userId: authUser.id,
+        })
+      ).data
+    );
+  }
+
+  async function getIsLiked() {
+    setIsLiked(
+      (
+        await axios.post(`/api/posts/${id}/is-liked`, {
+          userId: authUser.id,
+        })
+      ).data
+    );
+  }
+
+  async function savePost() {
+    await axios.post(`/api/posts/${id}/${isSaved ? "unsave" : "save"}`, {
+      userId: authUser.id,
+    });
+    getIsSaved();
+  }
+
+  async function likePost() {
+    if (authUser) {
+      await axios.post(`/api/posts/${id}/${isLiked ? "unlike" : "like"}`, {
+        userId: authUser.id,
+      });
+      await getIsLiked();
+      isLiked ? postDetail.likes-- : postDetail.likes++;
+      setPostDetail({ ...postDetail });
+    } else {
+      history.push("/login");
+    }
+  }
 
   async function handleSaveComment(e) {
     e.preventDefault();
@@ -56,16 +107,21 @@ export default function Post() {
       <Row>
         <Col className="postpage-left" md={1}>
           <Row>
-            <button className="like-button d-flex">
-              <Heart />
+            <button className="like-button d-flex" onClick={likePost}>
+              <Heart className={`${isLiked ? "text-danger" : ""}`} />
               <span className="ml-2">{postDetail.likes}</span>
             </button>
           </Row>
           <br />
           <Row>
-            <button className="like-button">
-              <Bookmark />
-            </button>
+            {authUser ? (
+              <button
+                className={`like-button ${isSaved ? "text-info" : ""}`}
+                onClick={savePost}
+              >
+                <Bookmark />
+              </button>
+            ) : null}
           </Row>
         </Col>
         <Col md={8}>
@@ -76,10 +132,8 @@ export default function Post() {
               </Card.Title>
               <div className="d-flex" style={{ gap: 5 }}>
                 {postDetail.tags.map((tag) => (
-                  <Link to={`/tag/${tag.id}`}>
-                    <Badge key={tag.id} variant="primary">
-                      {tag.name}
-                    </Badge>
+                  <Link key={tag.id} to={`/tag/${tag.id}`}>
+                    <Badge variant="primary">{tag.name}</Badge>
                   </Link>
                 ))}
               </div>

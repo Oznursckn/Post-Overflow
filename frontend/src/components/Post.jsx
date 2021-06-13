@@ -1,17 +1,49 @@
-import { MessageCircle, Heart, Calendar, Bookmark, Trash } from "react-feather";
+import { Heart, Calendar, Bookmark, Trash } from "react-feather";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import authService from "../services/authService";
+import { useHistory } from "react-router";
 import axios from "axios";
 
 export default function Post({ data, getPosts }) {
   const { id, title, body, slug, likes, user, dateCreated } = data;
+  const history = useHistory();
+  const [isSaved, setIsSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [authUser, setAuthUser] = useState();
+  const [likeCount, setLikeCount] = useState(likes);
 
   useEffect(() => {
     setAuthUser(authService.getAuthenticatedUser());
   }, []);
+
+  useEffect(() => {
+    if (authUser) {
+      getIsLiked();
+      getIsSaved();
+    }
+  }, [authUser]);
+
+  async function getIsSaved() {
+    setIsSaved(
+      (
+        await axios.post(`/api/posts/${id}/is-saved`, {
+          userId: authUser.id,
+        })
+      ).data
+    );
+  }
+
+  async function getIsLiked() {
+    setIsLiked(
+      (
+        await axios.post(`/api/posts/${id}/is-liked`, {
+          userId: authUser.id,
+        })
+      ).data
+    );
+  }
 
   async function deletePost() {
     await axios.delete(`/api/posts/${id}`);
@@ -19,9 +51,22 @@ export default function Post({ data, getPosts }) {
   }
 
   async function savePost() {
-    await axios.post(`/api/posts/${id}/save`, {
+    await axios.post(`/api/posts/${id}/${isSaved ? "unsave" : "save"}`, {
       userId: authUser.id,
     });
+    getIsSaved();
+  }
+
+  async function likePost() {
+    if (authUser) {
+      await axios.post(`/api/posts/${id}/${isLiked ? "unlike" : "like"}`, {
+        userId: authUser.id,
+      });
+      await getIsLiked();
+      isLiked ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
+    } else {
+      history.push("/login");
+    }
   }
 
   return (
@@ -54,14 +99,18 @@ export default function Post({ data, getPosts }) {
         </div>
       </Card.Body>
       <Card.Footer className="d-flex align-items-center">
-        <MessageCircle />
-        <button className="ml-auto like-button d-flex">
-          <Heart />
-          <span className="ml-2">{likes}</span>
+        <button className="ml-auto like-button d-flex" onClick={likePost}>
+          <Heart className={`${isLiked ? "text-danger" : ""}`} />
+          <span className="ml-2">{likeCount}</span>
         </button>
-        <button className="like-button" onClick={savePost}>
-          <Bookmark />
-        </button>
+        {authUser ? (
+          <button
+            className={`like-button ${isSaved ? "text-info" : ""}`}
+            onClick={savePost}
+          >
+            <Bookmark />
+          </button>
+        ) : null}
       </Card.Footer>
     </Card>
   );

@@ -4,6 +4,7 @@ import Comment from "../models/Comment";
 import { StatusCodes } from "http-status-codes";
 import postService from "./postService";
 import userService from "./userService";
+import User from "../models/User";
 
 class CommentService {
   async save(commentDto: CommentDto) {
@@ -145,6 +146,32 @@ class CommentService {
 
       comment.dislikes = comment.dislikes - 1;
       await comment.save();
+    }
+  }
+
+  async isDisliked(userId: string, commentId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.dislikedComments", "dislikedComment")
+        .where("user.id = :userId", { userId })
+        .andWhere("dislikedComment.id = :commentId", { commentId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async isLiked(userId: string, commentId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.likedComments", "likedComment")
+        .where("user.id = :userId", { userId })
+        .andWhere("likedComment.id = :commentId", { commentId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }

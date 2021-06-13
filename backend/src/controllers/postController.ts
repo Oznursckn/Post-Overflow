@@ -9,6 +9,7 @@ import commentService from "../services/commentService";
 import postService from "../services/postService";
 import { jwtAuthMiddleware } from "../middlewares/jwtAuth";
 import { postAuth } from "../middlewares/postAuth";
+import { reactionAuth } from "../middlewares/reactionAuth";
 
 const router = express.Router();
 
@@ -63,7 +64,7 @@ router.post(
   "/:id/like",
   jwtAuthMiddleware,
   validation(ReactionDto),
-  postAuth,
+  reactionAuth,
   async (req, res, next) => {
     try {
       await postService.like(req.params.id, req.body.userId);
@@ -78,7 +79,7 @@ router.post(
   "/:id/unlike",
   jwtAuthMiddleware,
   validation(ReactionDto),
-  postAuth,
+  reactionAuth,
   async (req, res, next) => {
     try {
       await postService.unlike(req.params.id, req.body.userId);
@@ -93,7 +94,7 @@ router.post(
   "/:id/save",
   jwtAuthMiddleware,
   validation(ReactionDto),
-  postAuth,
+  reactionAuth,
   async (req, res, next) => {
     try {
       await postService.savePost(req.params.id, req.body.userId);
@@ -108,11 +109,37 @@ router.post(
   "/:id/unsave",
   jwtAuthMiddleware,
   validation(ReactionDto),
-  postAuth,
+  reactionAuth,
   async (req, res, next) => {
     try {
       await postService.unsavePost(req.params.id, req.body.userId);
       res.send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/:id/is-saved",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  async (req, res, next) => {
+    try {
+      res.send(await postService.isSaved(req.body.userId, req.params.id));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/:id/is-liked",
+  jwtAuthMiddleware,
+  validation(ReactionDto),
+  async (req, res, next) => {
+    try {
+      res.send(await postService.isLiked(req.body.userId, req.params.id));
     } catch (error) {
       next(error);
     }

@@ -4,6 +4,7 @@ import { PostDto, PostQueryDto } from "../dto/postDto";
 import Post from "../models/Post";
 import userService from "./userService";
 import Tag from "../models/Tag";
+import User from "../models/User";
 import tagService from "./tagService";
 import slugify from "slugify";
 import PaginationDto from "../dto/paginationDto";
@@ -193,6 +194,32 @@ class PostService {
       );
       await user.save();
       await post.save();
+    }
+  }
+
+  async isSaved(userId: string, postId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.savedPosts", "savedPost")
+        .where("user.id = :userId", { userId })
+        .andWhere("savedPost.id = :postId", { postId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async isLiked(userId: string, postId: string): Promise<boolean> {
+    try {
+      await User.createQueryBuilder("user")
+        .leftJoin("user.likedPosts", "likedPost")
+        .where("user.id = :userId", { userId })
+        .andWhere("likedPost.id = :postId", { postId })
+        .getOneOrFail();
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }
