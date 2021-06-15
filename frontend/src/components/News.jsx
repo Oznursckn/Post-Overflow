@@ -1,4 +1,4 @@
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, ListGroup, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -18,13 +18,15 @@ export default function News() {
     <Card>
       <Card.Header>Son Haberler</Card.Header>
       <ListGroup variant="flush">
-        {loading
-          ? "loading"
-          : news.map(({ id, title, url }) => (
-              <a href={url} target="_blank" key={id}>
-                <ListGroup.Item>{title}</ListGroup.Item>
-              </a>
-            ))}
+        {loading ? (
+          <Spinner animation="border" className="mx-auto my-5" />
+        ) : (
+          news.map(({ id, title, url }) => (
+            <a href={url} target="_blank" rel="noreferrer" key={id}>
+              <ListGroup.Item>{title}</ListGroup.Item>
+            </a>
+          ))
+        )}
       </ListGroup>
     </Card>
   );

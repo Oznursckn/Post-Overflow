@@ -1,0 +1,34 @@
+services:
+    database:
+        image: postgres:alpine
+        container_name: database
+        environment:
+            POSTGRES_DB: post-overflow
+            POSTGRES_USER: postovrflw
+            POSTGRES_PASSWORD: 86Cd6nNkgRrBeHzC
+    
+    backend: 
+        container_name: backend
+        build:
+            context: backend
+            dockerfile: Dockerfile
+        depends_on:
+            - database
+        environment:
+            DATABASE_HOST: database
+            DATABASE_PORT: 5432
+            DATABASE_USERNAME: postovrflw
+            DATABASE_PASSWORD: 86Cd6nNkgRrBeHzC
+            DATABASE_NAME: post-overflow
+            JWT_SECRET: SbT8X6I5EB8RfAHwadAjWw51xt2lWqm7
+    
+    frontend:
+        container_name: frontend
+        build:
+            context: frontend
+            dockerfile: Dockerfile
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
+

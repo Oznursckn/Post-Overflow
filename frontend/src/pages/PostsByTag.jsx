@@ -5,17 +5,20 @@ import Tag from "../components/Tags";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useParams } from "react-router";
 
-export default function Home() {
+export default function PostsByTag() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+  const { id } = useParams();
+
   async function getPosts(reset) {
     setIsLoading(true);
     if (reset) {
-      let response = await axios.get("/api/posts", {
+      let response = await axios.get(`/api/tags/${id}/posts`, {
         params: {
           page: 1,
         },
@@ -26,7 +29,7 @@ export default function Home() {
       setIsLoading(false);
       return;
     }
-    let response = await axios.get("/api/posts", {
+    let response = await axios.get(`/api/tags/${id}/posts`, {
       params: {
         page,
       },
@@ -39,6 +42,10 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, [page]);
+
+  useEffect(() => {
+    getPosts(true);
+  }, [id]);
 
   return (
     <Layout>

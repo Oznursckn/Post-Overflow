@@ -21,29 +21,6 @@ class TagService {
   async getByName(name: string) {
     return await Tag.findOneOrFail({ where: { name } });
   }
-
-  async getPosts(id: string) {
-    const tagWithPosts = await Tag.createQueryBuilder("tag")
-      .where("tag.id = :id", { id })
-      .select([
-        "tag.id",
-        "tag.name",
-        "post.id",
-        "post.title",
-        "post.slug",
-        "post.dateCreated",
-        "user.id",
-        "user.firstName",
-        "user.lastName",
-        "user.email",
-      ])
-      .leftJoin("tag.posts", "post")
-      .innerJoin("post.user", "user")
-      .innerJoinAndSelect("post.tags", "tags")
-      .getOne();
-
-    return tagWithPosts.posts;
-  }
 }
 
 export default new TagService();

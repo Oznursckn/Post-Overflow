@@ -8,11 +8,11 @@ import Tag from "../models/Tag";
 export async function connectToDatabase() {
   const connection = await createConnection({
     type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "1234",
-    database: "post-overflow",
+    host: process.env.DATABASE_HOST,
+    port: Number(process.env.DATABASE_PORT),
+    username: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
     entities: [Post,User,Comment,Tag],
     synchronize: true,
   });

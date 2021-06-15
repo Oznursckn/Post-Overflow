@@ -16,6 +16,7 @@ class PostService {
 
     return Post.createQueryBuilder("post")
       .leftJoin("post.user", "user")
+      .leftJoin("post.tags", "tag")
       .select([
         "post.id",
         "post.likes",
@@ -26,6 +27,8 @@ class PostService {
         "user.id",
         "user.firstName",
         "user.lastName",
+        "tag.id",
+        "tag.name",
       ])
       .where(search ? "post.title ILIKE :search" : null, {
         search: `%${search}%`,
@@ -42,13 +45,15 @@ class PostService {
     const postTags: Tag[] = [];
 
     for (let tag of tags) {
-      tag = slugify(tag, { lower: true });
-      try {
-        postTags.push(await tagService.getByName(tag));
-      } catch (error) {
-        const newTag = new Tag();
-        newTag.name = tag;
-        postTags.push(newTag);
+      if (tag) {
+        tag = slugify(tag, { lower: true });
+        try {
+          postTags.push(await tagService.getByName(tag));
+        } catch (error) {
+          const newTag = new Tag();
+          newTag.name = tag;
+          postTags.push(newTag);
+        }
       }
     }
 
@@ -70,6 +75,25 @@ class PostService {
     const [posts, count] = await this.getWithPagination(
       query
     ).getManyAndCount();
+
+    const paginatedPostsDto: PaginationDto = {
+      total: count,
+      perPage: take,
+      currentPage: page ? page : 1,
+      numberOfPages: Math.ceil(count / take),
+      data: posts,
+    };
+
+    return paginatedPostsDto;
+  }
+
+  async getAllByTag(query: PostQueryDto, tagId: string) {
+    const { page = 1 } = query;
+    const take = 5;
+
+    const [posts, count] = await this.getWithPagination(query)
+      .andWhere("tag.id = :tagId", { tagId })
+      .getManyAndCount();
 
     const paginatedPostsDto: PaginationDto = {
       total: count,

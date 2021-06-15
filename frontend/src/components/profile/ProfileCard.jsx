@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Form, InputGroup } from "react-bootstrap";
+import { Card, Button, Modal, Form, InputGroup, Alert } from "react-bootstrap";
 import { Gift } from "react-feather";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export default function ProfileCard() {
   const [user, setUser] = useState();
   const [authUser, setAuthUser] = useState();
   const [isDeleteAccountShow, setIsDeleteAccountShow] = useState(false);
+  const [error, setError] = useState();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -48,13 +49,17 @@ export default function ProfileCard() {
         email: email || undefined,
         about,
         oldPassword: oldPassword || undefined,
-        newPassword: newPassword || undefined,
-        newPasswordAgain: newPasswordAgain || undefined,
+        password: newPassword || undefined,
+        passwordAgain: newPasswordAgain || undefined,
       });
       getUser();
       setIsUpdateProfileShow(false);
+      setError(null);
+      setNewPassword("");
+      setNewPasswordAgain("");
+      setOldPassword("");
     } catch (error) {
-      alert(error.response.data.message);
+      setError(error.response.data.message);
     }
   }
 
@@ -157,6 +162,7 @@ export default function ProfileCard() {
                 type="password"
                 placeholder="Yeni Şifreniz"
                 value={newPassword}
+                minLength={6}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </Form.Group>
@@ -166,9 +172,12 @@ export default function ProfileCard() {
                 type="password"
                 placeholder="Yeni Şifreniz Yeniden"
                 value={newPasswordAgain}
+                minLength={6}
                 onChange={(e) => setNewPasswordAgain(e.target.value)}
               />
             </Form.Group>
+
+            {error ? <Alert variant="danger">{error}</Alert> : null}
           </Modal.Body>
           <Modal.Footer>
             <Button

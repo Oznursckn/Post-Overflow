@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { UserDto, UpdateUserDto } from "../dto/userDto";
 import { ApiError } from "../config/ApiError";
 import { StatusCodes } from "http-status-codes";
-import { plainToClass } from "class-transformer";
+import { classToPlain, plainToClass } from "class-transformer";
 
 class UserService {
   async getAll() {
@@ -65,13 +65,24 @@ class UserService {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
-    await User.update(user.id, updateUserDto);
+    await User.update(
+      user.id,
+      classToPlain(
+        plainToClass(User, updateUserDto, {
+          excludeExtraneousValues: true,
+        }),
+        {
+          exposeUnsetFields: false,
+        }
+      )
+    );
   }
 
   async getUserWithLikedPosts(id: string) {
     const user = await User.createQueryBuilder("user")
       .leftJoinAndSelect("user.likedPosts", "likedPost")
       .leftJoinAndSelect("likedPost.user", "postUser")
+      .leftJoinAndSelect("likedPost.tags", "tag")
       .where("user.id = :id", { id })
       .getOne();
 
@@ -88,6 +99,7 @@ class UserService {
     const user = await User.createQueryBuilder("user")
       .leftJoinAndSelect("user.savedPosts", "savedPost")
       .leftJoinAndSelect("savedPost.user", "postUser")
+      .leftJoinAndSelect("savedPost.tags", "tag")
       .where("user.id = :id", { id })
       .getOne();
 

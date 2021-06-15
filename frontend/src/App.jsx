@@ -8,12 +8,14 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./PrivateRoute";
 import AuthRoute from "./AuthRoute";
 import Search from "./pages/Search";
+import PostsByTag from "./pages/PostsByTag";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/tag/:id" component={PostsByTag} />
         <Route exact path="/search/:search" component={Search} />
         <Route exact path="/post/:slug/:id" component={Post} />
         <Route exact path="/profile/:id" component={Profile} />
