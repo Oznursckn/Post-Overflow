@@ -1,5 +1,5 @@
 import { Heart, Calendar, Bookmark, Trash } from "react-feather";
-import { Card } from "react-bootstrap";
+import { Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import authService from "../services/authService";
@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 import axios from "axios";
 
 export default function Post({ data, getPosts }) {
-  const { id, title, body, slug, likes, user, dateCreated } = data;
+  const { id, title, body, slug, likes, user, dateCreated, tags } = data;
   const history = useHistory();
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -72,6 +72,13 @@ export default function Post({ data, getPosts }) {
   return (
     <Card className="mb-3">
       <Card.Body>
+        <div className="d-flex mb-3" style={{ gap: 5 }}>
+          {tags.map((tag) => (
+            <Link key={tag.id} to={`/tag/${tag.id}`}>
+              <Badge variant="primary">{tag.name}</Badge>
+            </Link>
+          ))}
+        </div>
         <Card.Title className="font-weight-bold d-flex">
           <Link to={`/post/${slug}/${id}`}>{title}</Link>
           {authUser && user && user.id === authUser.id ? (

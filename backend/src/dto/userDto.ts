@@ -51,7 +51,6 @@ export class UpdateUserDto {
 
   @ValidateIf((o) => o.password)
   @IsNotEmpty()
-  @MinLength(6)
   oldPassword: string;
 
   @IsOptional()

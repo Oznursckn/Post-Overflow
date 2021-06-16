@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function Tags() {
@@ -21,13 +21,15 @@ export default function Tags() {
       <ListGroup.Item>
         <strong>Tags</strong>
       </ListGroup.Item>
-      {isLoading
-        ? null
-        : tags.map(({ id, name }) => (
-            <ListGroup.Item key={id}>
-              <Link to={`/tags/${id}`}>{name}</Link>
-            </ListGroup.Item>
-          ))}
+      {isLoading ? (
+        <Spinner animation="border" className="mx-auto mt-3" />
+      ) : (
+        tags.map(({ id, name }) => (
+          <ListGroup.Item key={id}>
+            <Link to={`/tag/${id}`}>{name}</Link>
+          </ListGroup.Item>
+        ))
+      )}
     </ListGroup>
   );
 }
